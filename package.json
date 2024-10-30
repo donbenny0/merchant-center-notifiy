@@ -40,6 +40,7 @@
     "@commercetools-test-data/channel": "8.5.0",
     "@commercetools-test-data/commons": "8.5.0",
     "@commercetools-test-data/core": "8.5.0",
+    "@commercetools-uikit/calendar-utils": "^19.13.0",
     "@commercetools-uikit/constraints": "^19.9.0",
     "@commercetools-uikit/data-table": "^19.9.0",
     "@commercetools-uikit/flat-button": "^19.9.0",

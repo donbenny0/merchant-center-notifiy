@@ -1763,6 +1763,29 @@
     lodash "4.17.21"
     prop-types "15.8.1"
 
+"@commercetools-uikit/calendar-utils@^19.13.0":
+  version "19.13.0"
+  resolved "https://registry.yarnpkg.com/@commercetools-uikit/calendar-utils/-/calendar-utils-19.13.0.tgz#4f8519f0a15502d81c355c5bcf94093a1faa1aa7"
+  integrity sha512-MiQwJvevaliaZ9orfQ6qYsi7nyPmFllQlm2iwZqgBonL+8uZcDmJsx/1oLg0aguPDIsFUoRYle2gXWZqa54Qjw==
+  dependencies:
+    "@babel/runtime" "^7.20.13"
+    "@babel/runtime-corejs3" "^7.20.13"
+    "@commercetools-uikit/accessible-button" "19.13.0"
+    "@commercetools-uikit/design-system" "19.13.0"
+    "@commercetools-uikit/hooks" "19.13.0"
+    "@commercetools-uikit/icons" "19.13.0"
+    "@commercetools-uikit/input-utils" "19.13.0"
+    "@commercetools-uikit/secondary-icon-button" "19.13.0"
+    "@commercetools-uikit/spacings-inline" "19.13.0"
+    "@commercetools-uikit/text" "19.13.0"
+    "@commercetools-uikit/tooltip" "19.13.0"
+    "@commercetools-uikit/utils" "19.13.0"
+    "@emotion/react" "^11.10.5"
+    "@emotion/styled" "^11.10.5"
+    lodash "4.17.21"
+    prop-types "15.8.1"
+    react-select "5.8.1"
+
 "@commercetools-uikit/card@19.13.0", "@commercetools-uikit/card@^19.9.0":
   version "19.13.0"
   resolved "https://registry.yarnpkg.com/@commercetools-uikit/card/-/card-19.13.0.tgz#c87e54cd1c399e424c667a6d0b9341c231fe0671"

@@ -8,13 +8,58 @@ import TextInput from '@commercetools-uikit/text-input';
 import { Pagination } from '@commercetools-uikit/pagination';
 import SecondaryButton from '@commercetools-uikit/secondary-button';
 import { EditIcon } from '@commercetools-uikit/icons';
+import SelectField from '@commercetools-uikit/select-field';
 import style from './notifications.module.css';
 import { useAsyncDispatch, actions } from '@commercetools-frontend/sdk';
 import { MC_API_PROXY_TARGETS } from '@commercetools-frontend/constants';
 
+// ... (previous interfaces remain the same)
+interface NotificationValue {
+  channel: string;
+  status: string;
+  logs: any[];
+  resourceType: string;
+  recipient: string;
+}
+
+interface NotificationResult {
+  id: string;
+  version: number;
+  versionModifiedAt: string;
+  createdAt: string;
+  lastModifiedAt: string;
+  lastModifiedBy: {
+    clientId: string;
+    isPlatformClient: boolean;
+  };
+  createdBy: {
+    clientId: string;
+    isPlatformClient: boolean;
+  };
+  container: string;
+  key: string;
+  value: NotificationValue;
+}
+
+interface ApiResponse {
+  limit: number;
+  offset: number;
+  count: number;
+  total: number;
+  results: NotificationResult[];
+}
+
 const Notifications = () => {
   const dispatch = useAsyncDispatch();
-  const [notifications, setNotifications] = useState({});
+  const [notifications, setNotifications] = useState<NotificationResult[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
+  const [filterField, setFilterField] = useState('all');
+  const [filterValue, setFilterValue] = useState('');
+
+  // ... (fetchCustomObjects useEffect remains the same)
   useEffect(() => {
     async function fetchCustomObjects() {
       try {
@@ -23,86 +68,63 @@ const Notifications = () => {
             mcApiProxyTarget: MC_API_PROXY_TARGETS.COMMERCETOOLS_PLATFORM,
             service: 'customObjects',
             options: {
-              // Required: specify the container for custom objects
-              container: 'notifications', // Replace with your actual container name
-              // Optional: specify the key if you want to fetch a specific object
-              // key: 'your-key', // Uncomment and replace if fetching a specific object
-              // Additional options like pagination can be added if needed
-              // page: 1,
-              // perPage: 20,
+              id: 'notifications',
             },
           })
-        );
-        // Update state with result
-        console.log('Custom Objects:', result);
+        ) as ApiResponse;
+
+        setNotifications(result.results);
+        setIsLoading(false);
       } catch (error) {
-        // Handle error
         console.error('Error fetching custom objects:', error);
+        setIsLoading(false);
       }
     }
 
     fetchCustomObjects();
   }, [dispatch]);
 
-  // Generate dummy data using a loop
-  const generateDummyData = (count: number) => {
-    const dummyData = [];
-    const channels = ['Email', 'SMS', 'Push Notification', 'WhatsApp', 'Slack'];
-    const statuses = ['Sent', 'Pending', 'Failed', 'Delivered', 'Read'];
-
-    for (let i = 1; i <= count; i++) {
-      const randomChannel = channels[Math.floor(Math.random() * channels.length)];
-      const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
-
-      // Generate a random date within the last 30 days
-      const date = new Date();
-      date.setDate(date.getDate() - Math.floor(Math.random() * 30));
-      const formattedDate = date.toISOString().split('T')[0];
-
-      dummyData.push({
-        id: i.toString(),
-        resource: `Resource ${i}`,
-        to: `user${i}@example.com`,
-        channel: randomChannel,
-        status: randomStatus,
-        notifiedOn: formattedDate,
-      });
-    }
-    return dummyData;
-  };
-
-  // Generate 50 dummy records
-  const rows = generateDummyData(50);
-
-  // Define the columns for the data table
   const columns = [
-    { key: 'resource', label: 'Resource Type' },
-    { key: 'to', label: 'Send To' },
+    { key: 'resourceType', label: 'Resource Type' },
+    { key: 'recipient', label: 'Send To' },
     { key: 'channel', label: 'Channel' },
     { key: 'status', label: 'Status' },
-    { key: 'notifiedOn', label: 'Notified On' },
+    { key: 'createdAt', label: 'Notified On' },
   ];
 
-  // State for the search input
-  const [searchTerm, setSearchTerm] = useState('');
+  const filterOptions = [
+    { value: 'all', label: 'All Fields' },
+    { value: 'resourceType', label: 'Resource Type' },
+    { value: 'recipient', label: 'Send To' },
+    { value: 'channel', label: 'Channel' },
+    { value: 'status', label: 'Status' },
+  ];
 
-  // State for pagination
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(10); // Show 10 items per page
+  const rows = notifications.map(notification => ({
+    id: notification.id,
+    resourceType: notification.value.resourceType,
+    recipient: notification.value.recipient,
+    channel: notification.value.channel,
+    status: notification.value.status,
+    createdAt: new Date(notification.createdAt).toLocaleDateString(),
+  }));
 
-  // Filter rows based on the search term
+  // Updated filtering logic
   const filteredRows = rows.filter(row => {
-    return (
-      row.resource.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      row.to.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      row.channel.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      row.status.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      row.notifiedOn.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const searchTermLower = searchTerm.toLowerCase();
+    const filterValueLower = filterValue.toLowerCase();
+
+    if (filterField === 'all') {
+      return Object.values(row).some(value =>
+        String(value).toLowerCase().includes(searchTermLower)
+      );
+    }
+
+    return String(row[filterField as keyof typeof row])
+      .toLowerCase()
+      .includes(filterValueLower);
   });
 
-  // Calculate pagination values
-  const totalItems = filteredRows.length;
   const paginatedRows = filteredRows.slice((page - 1) * perPage, page * perPage);
 
   return (
@@ -117,28 +139,58 @@ const Notifications = () => {
       </div>
       <Text.Subheadline as='h5' intlMessage={messages.subtitle} />
 
-      {/* Search Input */}
-      <TextInput
-        value={searchTerm}
-        onChange={event => setSearchTerm(event.target.value)}
-        placeholder="Search..."
-      />
+      <Spacings.Inline scale="m" alignItems="center">
+        <div style={{ flex: 1 }}>
+          <TextInput
+            value={filterField === 'all' ? searchTerm : filterValue}
+            onChange={event =>
+              filterField === 'all'
+                ? setSearchTerm(event.target.value)
+                : setFilterValue(event.target.value)
+            }
+            placeholder={`Search${filterField !== 'all' ? ` by ${filterOptions.find(opt => opt.value === filterField)?.label}` : '...'}`}
+          />
+        </div>
+        <div style={{ width: '200px' }}>
+          <SelectField
+            horizontalConstraint="scale"
+            name="filter"
+            title=""
+            value={filterField}
+            options={filterOptions}
+            onChange={(event) => {
+              setFilterField(event.target.value as string);
+              setFilterValue('');
+              setSearchTerm('');
+            }}
+            touched={true}
+            errors={{}}
+            isRequired={false}
+          />
+        </div>
+      </Spacings.Inline>
 
-      <DataTableManager columns={columns}>
-        <DataTable
-          maxHeight={"350px"}
-          rows={paginatedRows}
-          columns={columns}
-        />
-      </DataTableManager>
+      {isLoading ? (
+        <Text.Body>Loading...</Text.Body>
+      ) : (
+        <>
+          <DataTableManager columns={columns}>
+            <DataTable
+              maxHeight="350px"
+              rows={paginatedRows}
+              columns={columns}
+            />
+          </DataTableManager>
 
-      <Pagination
-        page={page}
-        onPageChange={setPage}
-        perPage={perPage}
-        onPerPageChange={setPerPage}
-        totalItems={totalItems}
-      />
+          <Pagination
+            page={page}
+            onPageChange={setPage}
+            perPage={perPage}
+            onPerPageChange={setPerPage}
+            totalItems={filteredRows.length}
+          />
+        </>
+      )}
     </Spacings.Stack>
   );
 };
