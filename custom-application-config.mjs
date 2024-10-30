@@ -18,7 +18,7 @@ const config = {
   },
   oAuthScopes: {
     view: ['view_products'],
-    manage: ['manage_products'],
+    manage: ['manage_project'],
   },
   icon: '${path:@commercetools-frontend/assets/application-icons/rocket.svg}',
   mainMenuLink: {

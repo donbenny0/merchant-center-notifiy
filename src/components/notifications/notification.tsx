@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Spacings from '@commercetools-uikit/spacings';
 import Text from '@commercetools-uikit/text';
 import messages from './notifications';
@@ -6,8 +6,44 @@ import DataTable from '@commercetools-uikit/data-table';
 import DataTableManager from '@commercetools-uikit/data-table-manager';
 import TextInput from '@commercetools-uikit/text-input';
 import { Pagination } from '@commercetools-uikit/pagination';
+import SecondaryButton from '@commercetools-uikit/secondary-button';
+import { EditIcon } from '@commercetools-uikit/icons';
+import style from './notifications.module.css';
+import { useAsyncDispatch, actions } from '@commercetools-frontend/sdk';
+import { MC_API_PROXY_TARGETS } from '@commercetools-frontend/constants';
 
 const Notifications = () => {
+  const dispatch = useAsyncDispatch();
+  const [notifications, setNotifications] = useState({});
+  useEffect(() => {
+    async function fetchCustomObjects() {
+      try {
+        const result = await dispatch(
+          actions.get({
+            mcApiProxyTarget: MC_API_PROXY_TARGETS.COMMERCETOOLS_PLATFORM,
+            service: 'customObjects',
+            options: {
+              // Required: specify the container for custom objects
+              container: 'notifications', // Replace with your actual container name
+              // Optional: specify the key if you want to fetch a specific object
+              // key: 'your-key', // Uncomment and replace if fetching a specific object
+              // Additional options like pagination can be added if needed
+              // page: 1,
+              // perPage: 20,
+            },
+          })
+        );
+        // Update state with result
+        console.log('Custom Objects:', result);
+      } catch (error) {
+        // Handle error
+        console.error('Error fetching custom objects:', error);
+      }
+    }
+
+    fetchCustomObjects();
+  }, [dispatch]);
+
   // Generate dummy data using a loop
   const generateDummyData = (count: number) => {
     const dummyData = [];
@@ -71,7 +107,14 @@ const Notifications = () => {
 
   return (
     <Spacings.Stack scale="xl">
-      <Text.Headline as="h2" intlMessage={messages.title} />
+      <div className={style.headerTile}>
+        <Text.Headline as="h2" intlMessage={messages.title} />
+        <SecondaryButton
+          iconLeft={<EditIcon />}
+          label="Edit message"
+          onClick={() => alert('Button clicked')}
+        />
+      </div>
       <Text.Subheadline as='h5' intlMessage={messages.subtitle} />
 
       {/* Search Input */}
@@ -83,7 +126,7 @@ const Notifications = () => {
 
       <DataTableManager columns={columns}>
         <DataTable
-        maxHeight={"350px"}
+          maxHeight={"350px"}
           rows={paginatedRows}
           columns={columns}
         />
