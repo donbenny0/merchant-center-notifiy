@@ -43,6 +43,7 @@
     "@commercetools-uikit/calendar-utils": "^19.13.0",
     "@commercetools-uikit/constraints": "^19.9.0",
     "@commercetools-uikit/data-table": "^19.9.0",
+    "@commercetools-uikit/date-input": "^19.13.0",
     "@commercetools-uikit/date-range-input": "^19.13.0",
     "@commercetools-uikit/flat-button": "^19.9.0",
     "@commercetools-uikit/grid": "^19.9.0",

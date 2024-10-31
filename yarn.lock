@@ -1895,6 +1895,33 @@
     prop-types "15.8.1"
     react-intl "^6.3.2"
 
+"@commercetools-uikit/date-input@^19.13.0":
+  version "19.13.0"
+  resolved "https://registry.yarnpkg.com/@commercetools-uikit/date-input/-/date-input-19.13.0.tgz#f18fd76ba018e23a3e9c832a59a9c4f94e628b69"
+  integrity sha512-AAOXAItGQB2FBRcc6JW9Ymm4iMBlHTN5kX7BIyUg5HTj8gGcVvOAlfEFIyic9Ih8I9TSLNPkNoShyy4A//E8Fw==
+  dependencies:
+    "@babel/runtime" "^7.20.13"
+    "@babel/runtime-corejs3" "^7.20.13"
+    "@commercetools-uikit/accessible-button" "19.13.0"
+    "@commercetools-uikit/calendar-time-utils" "19.13.0"
+    "@commercetools-uikit/calendar-utils" "19.13.0"
+    "@commercetools-uikit/constraints" "19.13.0"
+    "@commercetools-uikit/design-system" "19.13.0"
+    "@commercetools-uikit/hooks" "19.13.0"
+    "@commercetools-uikit/icons" "19.13.0"
+    "@commercetools-uikit/secondary-icon-button" "19.13.0"
+    "@commercetools-uikit/select-utils" "19.13.0"
+    "@commercetools-uikit/spacings-inline" "19.13.0"
+    "@commercetools-uikit/text" "19.13.0"
+    "@commercetools-uikit/tooltip" "19.13.0"
+    "@commercetools-uikit/utils" "19.13.0"
+    "@emotion/react" "^11.10.5"
+    "@emotion/styled" "^11.10.5"
+    downshift "6.1.12"
+    prop-types "15.8.1"
+    react-is "17.0.2"
+    warning "4.0.3"
+
 "@commercetools-uikit/date-range-input@^19.13.0":
   version "19.13.0"
   resolved "https://registry.yarnpkg.com/@commercetools-uikit/date-range-input/-/date-range-input-19.13.0.tgz#c096eff7e40dbfc62ff79cefcf8735ceb8d4fddf"

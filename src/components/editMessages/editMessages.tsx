@@ -11,42 +11,13 @@ import Card from '@commercetools-uikit/card';
 import whatsappSvg from './whatsapp.svg';
 import { useAsyncDispatch, actions } from '@commercetools-frontend/sdk';
 import { MC_API_PROXY_TARGETS } from "@commercetools-frontend/constants";
+import { ApiResponse, MessageBodyResult } from "../../interfaces/messages.interface";
 
 type TEditMessagesProps = {
     linkToNotifications: string;
 };
 
-interface MessageBodyValue {
-    channel: string;
-    message: string;
-}
 
-interface MessageBodyResult {
-    id: string;
-    version: number;
-    versionModifiedAt: string;
-    createdAt: string;
-    lastModifiedAt: string;
-    lastModifiedBy: {
-        clientId: string;
-        isPlatformClient: boolean;
-    };
-    createdBy: {
-        clientId: string;
-        isPlatformClient: boolean;
-    };
-    container: string;
-    key: string;
-    value: MessageBodyValue;
-}
-
-interface ApiResponse {
-    limit: number;
-    offset: number;
-    count: number;
-    total: number;
-    results: MessageBodyResult[];
-}
 
 const EditMessages = (props: TEditMessagesProps) => {
     const [messageContent, setMessageContent] = useState<MessageBodyResult[]>([]);

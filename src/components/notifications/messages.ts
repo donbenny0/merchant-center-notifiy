@@ -8,6 +8,6 @@ export default defineMessages({
   subtitle: {
     id: 'Notifications.subtitle',
     defaultMessage:
-      'Notifications to Custom Applications! To get started, inspect the source code to get familiar with the setup, the folder structure, the development tools, etc. and read the README file for additional information.',
+      'This page shows the logs of notifications sent to customers. You can view all notification events.',
   },
 });
