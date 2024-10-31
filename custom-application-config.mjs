@@ -4,7 +4,7 @@ import { PERMISSIONS, entryPointUriPath } from './src/constants';
  * @type {import('@commercetools-frontend/application-config').ConfigOptionsForCustomApplication}
  */
 const config = {
-  name: 'Notification Channel',
+  name: 'Notifications',
   entryPointUriPath,
   cloudIdentifier: 'gcp-eu',
   env: {
@@ -28,8 +28,8 @@ const config = {
   },
   submenuLinks: [
     {
-      uriPath: 'channels',
-      defaultLabel: 'Channels',
+      uriPath: 'editMessage',
+      defaultLabel: 'Edit message',
       labelAllLocales: [],
       permissions: [PERMISSIONS.View],
     },

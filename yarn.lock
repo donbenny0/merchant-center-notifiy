@@ -1763,7 +1763,16 @@
     lodash "4.17.21"
     prop-types "15.8.1"
 
-"@commercetools-uikit/calendar-utils@^19.13.0":
+"@commercetools-uikit/calendar-time-utils@19.13.0":
+  version "19.13.0"
+  resolved "https://registry.yarnpkg.com/@commercetools-uikit/calendar-time-utils/-/calendar-time-utils-19.13.0.tgz#d4e3e39cab91de8eecc26967cc65f8e37bfcc153"
+  integrity sha512-YsbNw0GLBKwhssML+43Kd9Vy0jTiz+JaYxy5oB2kd9HWYN2olthud3g0BbgA/+EfcZVDrK+78XfVp3JDZ2ky4g==
+  dependencies:
+    "@babel/runtime" "^7.20.13"
+    "@babel/runtime-corejs3" "^7.20.13"
+    "@commercetools-uikit/utils" "19.13.0"
+
+"@commercetools-uikit/calendar-utils@19.13.0", "@commercetools-uikit/calendar-utils@^19.13.0":
   version "19.13.0"
   resolved "https://registry.yarnpkg.com/@commercetools-uikit/calendar-utils/-/calendar-utils-19.13.0.tgz#4f8519f0a15502d81c355c5bcf94093a1faa1aa7"
   integrity sha512-MiQwJvevaliaZ9orfQ6qYsi7nyPmFllQlm2iwZqgBonL+8uZcDmJsx/1oLg0aguPDIsFUoRYle2gXWZqa54Qjw==
@@ -1885,6 +1894,33 @@
     lodash "4.17.21"
     prop-types "15.8.1"
     react-intl "^6.3.2"
+
+"@commercetools-uikit/date-range-input@^19.13.0":
+  version "19.13.0"
+  resolved "https://registry.yarnpkg.com/@commercetools-uikit/date-range-input/-/date-range-input-19.13.0.tgz#c096eff7e40dbfc62ff79cefcf8735ceb8d4fddf"
+  integrity sha512-7o63WRfVfk3RFkJsiycXA4tEwe8d+GzdiiudlUrfLmw8ERKBodRPqgF/VsjbVtXfqb/BNW9nYX10hgj6oJSyVQ==
+  dependencies:
+    "@babel/runtime" "^7.20.13"
+    "@babel/runtime-corejs3" "^7.20.13"
+    "@commercetools-uikit/accessible-button" "19.13.0"
+    "@commercetools-uikit/calendar-time-utils" "19.13.0"
+    "@commercetools-uikit/calendar-utils" "19.13.0"
+    "@commercetools-uikit/constraints" "19.13.0"
+    "@commercetools-uikit/design-system" "19.13.0"
+    "@commercetools-uikit/hooks" "19.13.0"
+    "@commercetools-uikit/icons" "19.13.0"
+    "@commercetools-uikit/secondary-icon-button" "19.13.0"
+    "@commercetools-uikit/select-utils" "19.13.0"
+    "@commercetools-uikit/spacings-inline" "19.13.0"
+    "@commercetools-uikit/text" "19.13.0"
+    "@commercetools-uikit/tooltip" "19.13.0"
+    "@commercetools-uikit/utils" "19.13.0"
+    "@emotion/react" "^11.10.5"
+    "@emotion/styled" "^11.10.5"
+    downshift "6.1.12"
+    prop-types "15.8.1"
+    react-is "17.0.2"
+    warning "4.0.3"
 
 "@commercetools-uikit/design-system@19.13.0", "@commercetools-uikit/design-system@^19.9.0":
   version "19.13.0"
@@ -2176,6 +2212,30 @@
     "@emotion/styled" "^11.10.5"
     prop-types "15.8.1"
     react-intl "^6.3.2"
+
+"@commercetools-uikit/multiline-text-input@^19.13.0":
+  version "19.13.0"
+  resolved "https://registry.yarnpkg.com/@commercetools-uikit/multiline-text-input/-/multiline-text-input-19.13.0.tgz#4c8d2f12e7b2075ef02e2f6041be7a891c31691d"
+  integrity sha512-ctYU2lCCcLzTsjowlLhJMixewD6hQvG3nniZJEr0dHXoBpOh6h/YkVPGOEFVadLubqFha7KR9q8yb6jqYXLtWQ==
+  dependencies:
+    "@babel/runtime" "^7.20.13"
+    "@babel/runtime-corejs3" "^7.20.13"
+    "@commercetools-uikit/constraints" "19.13.0"
+    "@commercetools-uikit/design-system" "19.13.0"
+    "@commercetools-uikit/flat-button" "19.13.0"
+    "@commercetools-uikit/hooks" "19.13.0"
+    "@commercetools-uikit/icons" "19.13.0"
+    "@commercetools-uikit/input-utils" "19.13.0"
+    "@commercetools-uikit/secondary-icon-button" "19.13.0"
+    "@commercetools-uikit/spacings-inline" "19.13.0"
+    "@commercetools-uikit/spacings-stack" "19.13.0"
+    "@commercetools-uikit/tooltip" "19.13.0"
+    "@commercetools-uikit/utils" "19.13.0"
+    "@emotion/react" "^11.10.5"
+    "@emotion/styled" "^11.10.5"
+    downshift "6.1.12"
+    prop-types "15.8.1"
+    react-textarea-autosize "8.4.0"
 
 "@commercetools-uikit/notifications@^19.9.0":
   version "19.13.0"
@@ -11222,7 +11282,7 @@ react-from-dom@0.6.2:
   resolved "https://registry.yarnpkg.com/react-from-dom/-/react-from-dom-0.6.2.tgz#9da903a508c91c013b55afcd59348b8b0a39bdb4"
   integrity sha512-qvWWTL/4xw4k/Dywd41RBpLQUSq97csuv15qrxN+izNeLYlD9wn5W8LspbfYe5CWbaSdkZ72BsaYBPQf2x4VbQ==
 
-react-intl@^6.3.2, react-intl@^6.4.7:
+react-intl@^6.3.2:
   version "6.8.4"
   resolved "https://registry.yarnpkg.com/react-intl/-/react-intl-6.8.4.tgz#e39b6a71bbce5db90460abba4869c9f58b38fc1e"
   integrity sha512-UKYrCIztyvSiZCpvHjDwAHlXT735fDioABVP+uhRAOhDSBS9NQ2vVbxiUikvVEBdr2b0cTe1tUfOfvhbmSPi/A==

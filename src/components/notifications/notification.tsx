@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Spacings from '@commercetools-uikit/spacings';
 import Text from '@commercetools-uikit/text';
-import messages from './notifications';
+import messages from './messages';
 import DataTable from '@commercetools-uikit/data-table';
 import DataTableManager from '@commercetools-uikit/data-table-manager';
 import TextInput from '@commercetools-uikit/text-input';
@@ -12,8 +12,8 @@ import SelectField from '@commercetools-uikit/select-field';
 import style from './notifications.module.css';
 import { useAsyncDispatch, actions } from '@commercetools-frontend/sdk';
 import { MC_API_PROXY_TARGETS } from '@commercetools-frontend/constants';
-
-// ... (previous interfaces remain the same)
+import Link from '@commercetools-uikit/link';
+import { useRouteMatch } from 'react-router-dom';
 interface NotificationValue {
   channel: string;
   status: string;
@@ -51,6 +51,8 @@ interface ApiResponse {
 
 const Notifications = () => {
   const dispatch = useAsyncDispatch();
+  const match = useRouteMatch();
+
   const [notifications, setNotifications] = useState<NotificationResult[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -59,7 +61,6 @@ const Notifications = () => {
   const [filterField, setFilterField] = useState('all');
   const [filterValue, setFilterValue] = useState('');
 
-  // ... (fetchCustomObjects useEffect remains the same)
   useEffect(() => {
     async function fetchCustomObjects() {
       try {
@@ -130,12 +131,12 @@ const Notifications = () => {
   return (
     <Spacings.Stack scale="xl">
       <div className={style.headerTile}>
-        <Text.Headline as="h2" intlMessage={messages.title} />
-        <SecondaryButton
-          iconLeft={<EditIcon />}
-          label="Edit message"
-          onClick={() => alert('Button clicked')}
-        />
+        <Text.Headline as="h1" intlMessage={messages.title} />
+        <Link isExternal={false} to={`${match.url}/editMessage`}>
+          <SecondaryButton
+            iconLeft={<EditIcon />}
+            label="Edit message"/>
+        </Link>
       </div>
       <Text.Subheadline as='h5' intlMessage={messages.subtitle} />
 

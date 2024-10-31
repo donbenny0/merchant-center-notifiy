@@ -1,13 +1,14 @@
 import type { ReactNode } from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import Spacings from '@commercetools-uikit/spacings';
 import Notification from './components/notifications';
+import EditMessages from './components/editMessages';
 
 type ApplicationRoutesProps = {
   children?: ReactNode;
 };
 const ApplicationRoutes = (_props: ApplicationRoutesProps) => {
-  // const match = useRouteMatch();
+  const match = useRouteMatch();
 
   /**
    * When using routes, there is a good chance that you might want to
@@ -23,6 +24,9 @@ const ApplicationRoutes = (_props: ApplicationRoutesProps) => {
   return (
     <Spacings.Inset scale="l">
       <Switch>
+        <Route path={`${match.path}/editMessage`}>
+          <EditMessages linkToNotifications={match.url} />
+        </Route>
         <Route>
           <Notification />
         </Route>
