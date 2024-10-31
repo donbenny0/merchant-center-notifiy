@@ -15,7 +15,7 @@ import { useAsyncDispatch } from '@commercetools-frontend/sdk';
 import Link from '@commercetools-uikit/link';
 import { useRouteMatch } from 'react-router-dom';
 import { NotificationResult } from '../../interfaces/notifications.interface';
-import { fetchCustomObjects } from '../../hooks/notifications.hook';
+import { fetchAllNotificationsObject } from '../../hooks/notifications.hook';
 import { filterRows, toSentenceCase } from '../../utils/notifications.utils';
 
 const ITEMS_PER_PAGE = 10;
@@ -55,7 +55,7 @@ const Notifications = () => {
 
   const loadNotifications = useCallback(async () => {
     try {
-      const results = await fetchCustomObjects(dispatch);
+      const results = await fetchAllNotificationsObject(dispatch);
       setNotifications(results);
     } catch (error) {
       console.error('Failed to load notifications:', error);

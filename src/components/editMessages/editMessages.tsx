@@ -1,3 +1,4 @@
+
 import Spacings from "@commercetools-uikit/spacings";
 import Text from "@commercetools-uikit/text";
 import { Link as RouterLink } from "react-router-dom";
@@ -5,93 +6,82 @@ import FlatButton from "@commercetools-uikit/flat-button";
 import { BackIcon } from "@commercetools-uikit/icons";
 import MultilineTextField from '@commercetools-uikit/multiline-text-field';
 import messages from "./messages";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styles from './editMessages.module.css';
 import Card from '@commercetools-uikit/card';
 import whatsappSvg from './whatsapp.svg';
-import { useAsyncDispatch, actions } from '@commercetools-frontend/sdk';
-import { MC_API_PROXY_TARGETS } from "@commercetools-frontend/constants";
-import { ApiResponse, MessageBodyResult } from "../../interfaces/messages.interface";
+import { useAsyncDispatch } from '@commercetools-frontend/sdk';
+import { MessageBodyResult } from "../../interfaces/messages.interface";
+import { fetchMessageBodyObject, updateMessageBodyObject } from "../../hooks/messages.hook";
 
 type TEditMessagesProps = {
     linkToNotifications: string;
 };
 
-
-
-const EditMessages = (props: TEditMessagesProps) => {
+const EditMessages = ({ linkToNotifications }: TEditMessagesProps) => {
     const [messageContent, setMessageContent] = useState<MessageBodyResult[]>([]);
     const [selectedMethod, setSelectedMethod] = useState("whatsapp");
     const [editedMessage, setEditedMessage] = useState("");
     const [isLoading, setIsLoading] = useState(true);
+    const [isSaving, setIsSaving] = useState(false);
     const dispatch = useAsyncDispatch();
 
-    const fetchCustomObjects = async () => {
+    const loadMessages = useCallback(async () => {
         try {
-            const result = await dispatch(
-                actions.get({
-                    mcApiProxyTarget: MC_API_PROXY_TARGETS.COMMERCETOOLS_PLATFORM,
-                    service: 'customObjects',
-                    options: {
-                        id: 'messageBody',
-                    },
-                })
-            ) as ApiResponse;
-
-            setMessageContent(result.results);
-            setIsLoading(false);
+            const results = await fetchMessageBodyObject(dispatch);
+            setMessageContent(results);
+            // Only set initial message if editedMessage is empty
+            if (!editedMessage) {
+                const selectedMsg = results.find(
+                    msg => msg.value.channel.toLowerCase() === selectedMethod.toLowerCase()
+                );
+                setEditedMessage(selectedMsg?.value.message || "");
+            }
         } catch (error) {
-            console.error('Error fetching custom objects:', error);
+            console.error('Failed to load messages:', error);
+            setMessageContent([]);
+        } finally {
             setIsLoading(false);
         }
-    };
+    }, [dispatch, selectedMethod, editedMessage]);
 
     useEffect(() => {
-        fetchCustomObjects();
-    }, [dispatch]);
+        loadMessages();
+    }, [loadMessages]);
 
-    // Find the message that matches the selected channel
     const selectedMessage = messageContent.find(
         msg => msg.value.channel.toLowerCase() === selectedMethod.toLowerCase()
     );
 
     const handleSave = async () => {
         if (!selectedMessage) return;
+        
+        setIsSaving(true);
         try {
-            await dispatch(
-                actions.post({
-                    mcApiProxyTarget: MC_API_PROXY_TARGETS.COMMERCETOOLS_PLATFORM,
-                    service: 'customObjects',
-                    options: {},
-                    payload: {
-                        container: selectedMessage.container,
-                        key: selectedMessage.key,
-                        value: {
-                            channel: selectedMethod,
-                            message: editedMessage || selectedMessage.value.message,
-                        },
-                    },
-                })
-            );
-
-            // Reset edited message and refresh data
-            setEditedMessage("");
-            fetchCustomObjects();
+            await updateMessageBodyObject(dispatch, {
+                container: selectedMessage.container,
+                key: selectedMessage.key,
+                value: {
+                    channel: selectedMethod,
+                    message: editedMessage,
+                },
+            });
+            loadMessages();
         } catch (error) {
             console.error('Error saving message:', error);
+        } finally {
+            setIsSaving(false);
         }
     };
 
-    if (isLoading) {
-        return <div>Loading...</div>;
-    }
+    if (isLoading) return <div>Loading...</div>;
 
     return (
         <Spacings.Stack scale="xl">
             <Spacings.Stack scale="xs">
                 <FlatButton
                     as={RouterLink}
-                    to={props.linkToNotifications}
+                    to={linkToNotifications}
                     label="Go to notifications"
                     icon={<BackIcon />}
                 />
@@ -117,14 +107,20 @@ const EditMessages = (props: TEditMessagesProps) => {
                             <MultilineTextField
                                 title="Message body"
                                 placeholder="What's your message body"
-                                value={editedMessage || selectedMessage?.value.message || ""}
-                                onChange={(event: any) => setEditedMessage(event.target.value)}
+                                value={editedMessage}
+                                onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => 
+                                    setEditedMessage(event.target.value)}
                                 id="messageBodyTextarea"
                             />
                         </div>
                     </div>
                     <div className={styles.cardFooter}>
-                        <button onClick={handleSave}>Save</button>
+                        <button 
+                            onClick={handleSave} 
+                            disabled={isSaving}
+                        >
+                            {isSaving ? 'Saving...' : 'Save'}
+                        </button>
                     </div>
                 </Card>
             </Spacings.Stack>

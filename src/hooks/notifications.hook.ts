@@ -2,7 +2,7 @@ import { actions } from '@commercetools-frontend/sdk';
 import { MC_API_PROXY_TARGETS } from '@commercetools-frontend/constants';
 import { ApiResponse } from '../interfaces/notifications.interface';
 
-export const fetchCustomObjects = async (dispatch: any) => {
+export const fetchAllNotificationsObject = async (dispatch: any) => {
     try {
         const result = await dispatch(
             actions.get({
