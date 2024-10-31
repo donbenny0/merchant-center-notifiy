@@ -23,9 +23,9 @@ export default defineMessages({
         defaultMessage:
             'Notifications to Custom Applications! To get started, inspect the source code to get familiar with the setup, the folder structure, the development tools, etc. and read the README file for additional information.',
     },
-    messageTitle: {
+    messageBoxTitle: {
         id: 'editMessages.messageTitle',
-        defaultMessage: 'Message Title',
+        defaultMessage: 'Message Editor',
     },
     placeholderTitle: {
         id: 'editMessages.placeholderTitle',

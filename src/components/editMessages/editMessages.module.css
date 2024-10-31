@@ -1,5 +1,62 @@
-.bgContainer {
-    background-color: red;
-    padding: 5%;
-    border-radius: 10px;
+.actionButtons {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+}
+
+.actionButtons button {
+    display: flex;
+    align-items: center;
+    /* background-color: #25D366;
+    border:1px solid #25D366; */
+    background: #f0f0f0;
+    border-color: #999;
+    padding: 10px;
+    border-radius: 5px;
+    color: black;
+    font-weight: 500;
+}
+
+.actionButtons img {
+    width: 18px;
+    margin-right: 5px;
+}
+
+.actionButtons button:hover {
+    box-shadow: 6px 6px 12px #c5c5c5,
+        -6px -6px 12px #ffffff;
+}
+
+
+.messageArea {
+    margin-top: 20px;
+}
+
+.messageArea textarea {
+    margin-top: 10px !important;
+}
+
+.messageArea label {
+    font-weight: 500;
+    color: rgb(82, 82, 115);
+}
+
+.cardFooter {
+    display: flex;
+    justify-content: end;
+    padding-top: 1%;
+}
+
+.cardFooter button {
+    padding: 0.8%;
+    border-radius: 5px;
+    background-color: #1e90ff;
+    border: none;
+    color: white;
+}
+
+.actionButtons button.active {
+    background-color: #25D366;
+    color: white;
+    border: 1px solid #25D366;
 }

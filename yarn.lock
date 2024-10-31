@@ -2213,7 +2213,27 @@
     prop-types "15.8.1"
     react-intl "^6.3.2"
 
-"@commercetools-uikit/multiline-text-input@^19.13.0":
+"@commercetools-uikit/multiline-text-field@^19.13.0":
+  version "19.13.0"
+  resolved "https://registry.yarnpkg.com/@commercetools-uikit/multiline-text-field/-/multiline-text-field-19.13.0.tgz#4f8a95926f5b13ab9dbd6afa5fbdf461e5ad41e8"
+  integrity sha512-2/+ZTnKRaQdwtH5zIpjArIDPgd2iPEKl6PwvC/hv4B8rbBz/vX6ZN+bFzDsUHWx/1SQNkgjYggHLJvooaqDAAA==
+  dependencies:
+    "@babel/runtime" "^7.20.13"
+    "@babel/runtime-corejs3" "^7.20.13"
+    "@commercetools-uikit/constraints" "19.13.0"
+    "@commercetools-uikit/design-system" "19.13.0"
+    "@commercetools-uikit/field-errors" "19.13.0"
+    "@commercetools-uikit/field-label" "19.13.0"
+    "@commercetools-uikit/field-warnings" "19.13.0"
+    "@commercetools-uikit/multiline-text-input" "19.13.0"
+    "@commercetools-uikit/spacings" "19.13.0"
+    "@commercetools-uikit/utils" "19.13.0"
+    "@emotion/react" "^11.10.5"
+    "@emotion/styled" "^11.10.5"
+    prop-types "15.8.1"
+    react-intl "^6.3.2"
+
+"@commercetools-uikit/multiline-text-input@19.13.0", "@commercetools-uikit/multiline-text-input@^19.13.0":
   version "19.13.0"
   resolved "https://registry.yarnpkg.com/@commercetools-uikit/multiline-text-input/-/multiline-text-input-19.13.0.tgz#4c8d2f12e7b2075ef02e2f6041be7a891c31691d"
   integrity sha512-ctYU2lCCcLzTsjowlLhJMixewD6hQvG3nniZJEr0dHXoBpOh6h/YkVPGOEFVadLubqFha7KR9q8yb6jqYXLtWQ==
