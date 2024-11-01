@@ -68,7 +68,7 @@ const LogsPage = ({ linkToNotifications }: TLogsPageProps) => {
                 <Card theme="dark" type="raised">
                     <h6>Message</h6>
                     <br />
-                    <span>{logStatestate.value?.logs?.message}</span>
+                    <code>{logStatestate.value?.logs?.message}</code>
                 </Card>
             </div>
         </Spacings.Stack>

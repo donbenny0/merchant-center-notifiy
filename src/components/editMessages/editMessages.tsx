@@ -13,6 +13,7 @@ import whatsappSvg from './whatsapp.svg';
 import { useAsyncDispatch } from '@commercetools-frontend/sdk';
 import { MessageBodyResult } from "../../interfaces/messages.interface";
 import { fetchMessageBodyObject, updateMessageBodyObject } from "../../hooks/messages.hook";
+import Loader from "../loader";
 
 type TEditMessagesProps = {
     linkToNotifications: string;
@@ -55,7 +56,7 @@ const EditMessages = ({ linkToNotifications }: TEditMessagesProps) => {
 
     const handleSave = async () => {
         setIsSaving(true);
-        const key: string = selectedMethod === "whatsapp" ? "msg-body-key-constant-whatsapp"  : "msg-body-key-constant-other-channel"
+        const key: string = selectedMethod === "whatsapp" ? "msg-body-key-constant-whatsapp" : "msg-body-key-constant-other-channel"
         try {
             await updateMessageBodyObject(dispatch, {
                 container: "messageBody",
@@ -73,7 +74,9 @@ const EditMessages = ({ linkToNotifications }: TEditMessagesProps) => {
         }
     };
 
-    if (isLoading) return <div>Loading...</div>;
+    if (isLoading) return <div className={styles.loadingContainer}>
+        <Loader />
+    </div>;
 
     return (
         <Spacings.Stack scale="xl">
