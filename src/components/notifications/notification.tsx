@@ -17,6 +17,7 @@ import { useRouteMatch } from 'react-router-dom';
 import { NotificationResult } from '../../interfaces/notifications.interface';
 import { fetchAllNotificationsObject } from '../../hooks/notifications.hook';
 import { filterRows, toSentenceCase } from '../../utils/notifications.utils';
+import Loader from '../loader';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -48,9 +49,9 @@ const Notifications = () => {
   const [filterField, setFilterField] = useState('all');
   const [filterValue, setFilterValue] = useState('');
   const [dateFilter, setDateFilter] = useState<string>('');
-  const [sortBy, setSortBy] = useState<{ key: string; order: 'asc' | 'desc' }>({ 
-    key: 'createdAt', 
-    order: 'desc' 
+  const [sortBy, setSortBy] = useState<{ key: string; order: 'asc' | 'desc' }>({
+    key: 'createdAt',
+    order: 'desc'
   });
 
   const loadNotifications = useCallback(async () => {
@@ -81,11 +82,11 @@ const Notifications = () => {
 
   const filteredRows = useMemo(() => {
     let filtered = filterRows(rows, searchTerm, filterValue, filterField);
-    
+
     if (dateFilter && filterField === 'date') {
       filtered = filtered.filter(row => row.createdAt === new Date(dateFilter).toLocaleDateString());
     }
-    
+
     return filtered;
   }, [rows, searchTerm, filterValue, filterField, dateFilter]);
 
@@ -93,7 +94,7 @@ const Notifications = () => {
     return [...filteredRows].sort((a, b) => {
       const aValue = a[sortBy.key as keyof typeof a];
       const bValue = b[sortBy.key as keyof typeof b];
-      
+
       if (sortBy.order === 'asc') {
         return aValue > bValue ? 1 : -1;
       }
@@ -180,7 +181,9 @@ const Notifications = () => {
       </Spacings.Inline>
 
       {isLoading ? (
-        <Text.Body>Loading...</Text.Body>
+        <div className={style.loadingContainer}>
+          <Loader />
+        </div>
       ) : (
         <>
           <DataTableManager columns={columns}>
@@ -191,6 +194,10 @@ const Notifications = () => {
               sortedBy={sortBy.key}
               sortDirection={sortBy.order}
               onSortChange={handleColumnSort}
+              onRowClick={(row) => {
+                window.history.pushState({}, '', `${match.url}/logs/${row.id}`);
+                window.dispatchEvent(new PopStateEvent('popstate'));
+              }}
             />
           </DataTableManager>
 

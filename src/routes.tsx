@@ -3,6 +3,7 @@ import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import Spacings from '@commercetools-uikit/spacings';
 import Notification from './components/notifications';
 import EditMessages from './components/editMessages';
+import LogsPage from './components/logsPage';
 
 type ApplicationRoutesProps = {
   children?: ReactNode;
@@ -26,6 +27,9 @@ const ApplicationRoutes = (_props: ApplicationRoutesProps) => {
       <Switch>
         <Route path={`${match.path}/editMessage`}>
           <EditMessages linkToNotifications={match.url} />
+        </Route>
+        <Route path={`${match.path}/logs/:id`}>
+          <LogsPage linkToNotifications={match.url} />
         </Route>
         <Route>
           <Notification />
