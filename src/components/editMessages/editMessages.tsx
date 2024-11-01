@@ -49,18 +49,17 @@ const EditMessages = ({ linkToNotifications }: TEditMessagesProps) => {
         loadMessages();
     }, [loadMessages]);
 
-    const selectedMessage = messageContent.find(
-        msg => msg.value.channel.toLowerCase() === selectedMethod.toLowerCase()
-    );
+    // const selectedMessage = messageContent.find(
+    //     msg => msg.value.channel.toLowerCase() === selectedMethod.toLowerCase()
+    // );
 
     const handleSave = async () => {
-        if (!selectedMessage) return;
-        
         setIsSaving(true);
+        const key: string = selectedMethod === "whatsapp" ? "msg-body-key-constant-whatsapp"  : "msg-body-key-constant-other-channel"
         try {
             await updateMessageBodyObject(dispatch, {
-                container: selectedMessage.container,
-                key: selectedMessage.key,
+                container: "messageBody",
+                key: key,
                 value: {
                     channel: selectedMethod,
                     message: editedMessage,
@@ -108,15 +107,15 @@ const EditMessages = ({ linkToNotifications }: TEditMessagesProps) => {
                                 title="Message body"
                                 placeholder="What's your message body"
                                 value={editedMessage}
-                                onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => 
+                                onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) =>
                                     setEditedMessage(event.target.value)}
                                 id="messageBodyTextarea"
                             />
                         </div>
                     </div>
                     <div className={styles.cardFooter}>
-                        <button 
-                            onClick={handleSave} 
+                        <button
+                            onClick={handleSave}
                             disabled={isSaving}
                         >
                             {isSaving ? 'Saving...' : 'Save'}
