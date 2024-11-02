@@ -9,11 +9,11 @@ const config = {
   cloudIdentifier: 'gcp-eu',
   env: {
     development: {
-      initialProjectKey: 'orders-notifications',
+      initialProjectKey: "${env:PROJECT_ID}",
     },
     production: {
-      applicationId: 'cm30jhvvh0043zcqkfqlnl0zd',
-      url: 'https://merchant-center-notifiy-3ur18t0r5-dons-projects-6f42b4c1.vercel.app',
+      applicationId: "${env:APPLICATION_ID}",
+      url: "https://merchant-center-notifiy.vercel.app",
     },
   },
   oAuthScopes: {
