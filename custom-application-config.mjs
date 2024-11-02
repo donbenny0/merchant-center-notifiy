@@ -13,14 +13,14 @@ const config = {
     },
     production: {
       applicationId: 'cm30jhvvh0043zcqkfqlnl0zd',
-      url: 'https://merchant-center-notifiy.vercel.app/',
+      url: 'https://merchant-center-notifiy-3ur18t0r5-dons-projects-6f42b4c1.vercel.app',
     },
   },
   oAuthScopes: {
     view: ['view_orders'],
     manage: ['manage_orders'],
   },
-  icon: '${path:@commercetools-frontend/assets/application-icons/rocket.svg}',
+  icon: '${path:@commercetools-frontend/assets/application-icons/bell.svg}',
   mainMenuLink: {
     defaultLabel: 'Notifications',
     labelAllLocales: [],
