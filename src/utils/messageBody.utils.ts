@@ -21,8 +21,8 @@ export const validateTemplate = (template: string): string[] => {
         }
 
         // Check for strings that are too short
-        if (path.length < 3) {
-            errors.push(`Placeholder string too short: "${placeholder}". Must be at least 3 characters long.`);
+        if (path.length < 2) {
+            errors.push(`Placeholder string too short: "${placeholder}". Must be at least 2 characters long.`);
             continue;
         }
 
@@ -86,9 +86,9 @@ export const validateTemplate = (template: string): string[] => {
     }
 
     // Final check for any placeholders found
-    if (errors.length === 0 && !placeholderRegex.test(template)) {
-        errors.push("No valid placeholders detected in the template.");
-    }
+    // if (errors.length === 0 && !placeholderRegex.test(template)) {
+    //     errors.push("No valid placeholders detected in the template.");
+    // }
 
     return errors;
 };

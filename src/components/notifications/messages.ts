@@ -2,12 +2,12 @@ import { defineMessages } from 'react-intl';
 
 export default defineMessages({
   title: {
-    id: 'Notifications.title',
+    id: 'notifications.title',
     defaultMessage: 'Notifications',
   },
   subtitle: {
-    id: 'Notifications.subtitle',
+    id: 'notifications.subtitle',
     defaultMessage:
-      'This page shows the logs of notifications sent to customers. You can view all notification events.',
+      'This page provides a comprehensive log of notifications dispatched to customers. You can review all notification events in detail.',
   },
 });
