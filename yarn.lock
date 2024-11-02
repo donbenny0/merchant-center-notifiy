@@ -2374,6 +2374,40 @@
     prop-types "15.8.1"
     react-is "17.0.2"
 
+"@commercetools-uikit/search-select-input@^19.13.0":
+  version "19.13.0"
+  resolved "https://registry.yarnpkg.com/@commercetools-uikit/search-select-input/-/search-select-input-19.13.0.tgz#ae0a9d441e0a69c6bbd46d22dd9b0c844b3d6d63"
+  integrity sha512-MZPcPzX49pcrpVtLJybp2komV9dc2Km2Kt5lQImKf15kmH726eSM6Anpja68lI73vPXr5lanvtJOf7p5v3phJA==
+  dependencies:
+    "@babel/runtime" "^7.20.13"
+    "@babel/runtime-corejs3" "^7.20.13"
+    "@commercetools-uikit/async-select-input" "19.13.0"
+    "@commercetools-uikit/design-system" "19.13.0"
+    "@commercetools-uikit/select-utils" "19.13.0"
+    "@commercetools-uikit/spacings" "19.13.0"
+    "@commercetools-uikit/text" "19.13.0"
+    "@commercetools-uikit/utils" "19.13.0"
+    "@emotion/react" "^11.10.5"
+    "@emotion/styled" "^11.10.5"
+    prop-types "15.8.1"
+
+"@commercetools-uikit/search-text-input@^19.13.0":
+  version "19.13.0"
+  resolved "https://registry.yarnpkg.com/@commercetools-uikit/search-text-input/-/search-text-input-19.13.0.tgz#6225417094ec7ab0322ba904fbe3fe9bef0977e9"
+  integrity sha512-LIi0Bke2wWnm+3b0hLKnRAtft/+nwHO7sklR420dfooVEHY5pZKqkPJJ0+tB0gMNNXTi/LLB5UHpUF2xWZMuxQ==
+  dependencies:
+    "@babel/runtime" "^7.20.13"
+    "@babel/runtime-corejs3" "^7.20.13"
+    "@commercetools-uikit/constraints" "19.13.0"
+    "@commercetools-uikit/design-system" "19.13.0"
+    "@commercetools-uikit/icons" "19.13.0"
+    "@commercetools-uikit/input-utils" "19.13.0"
+    "@commercetools-uikit/secondary-icon-button" "19.13.0"
+    "@commercetools-uikit/utils" "19.13.0"
+    "@emotion/react" "^11.10.5"
+    "@emotion/styled" "^11.10.5"
+    prop-types "15.8.1"
+
 "@commercetools-uikit/secondary-button@19.13.0", "@commercetools-uikit/secondary-button@^19.9.0":
   version "19.13.0"
   resolved "https://registry.yarnpkg.com/@commercetools-uikit/secondary-button/-/secondary-button-19.13.0.tgz#255c7f39548d4362aa265dbe30f6a780941a77b9"

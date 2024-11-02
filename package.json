@@ -57,6 +57,8 @@
     "@commercetools-uikit/multiline-text-input": "^19.13.0",
     "@commercetools-uikit/notifications": "^19.9.0",
     "@commercetools-uikit/pagination": "^19.9.0",
+    "@commercetools-uikit/search-select-input": "^19.13.0",
+    "@commercetools-uikit/search-text-input": "^19.13.0",
     "@commercetools-uikit/select-field": "^19.9.0",
     "@commercetools-uikit/spacings": "^19.9.0",
     "@commercetools-uikit/text": "^19.9.0",

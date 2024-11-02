@@ -101,3 +101,22 @@
     margin-top: 15px;
     font-size: 16px;
 }
+
+
+.validationErrors {
+    margin-top: 8px;
+    padding: 8px;
+    border-radius: 4px;
+    background-color: #fce5e5;
+}
+
+.errorMessage {
+    color: #d93025;
+    font-size: 14px;
+    line-height: 1.4;
+    margin-bottom: 4px;
+}
+
+.errorMessage:last-child {
+    margin-bottom: 0;
+}

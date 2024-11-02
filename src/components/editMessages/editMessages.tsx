@@ -1,4 +1,3 @@
-
 import Spacings from "@commercetools-uikit/spacings";
 import Text from "@commercetools-uikit/text";
 import { Link as RouterLink } from "react-router-dom";
@@ -16,23 +15,23 @@ import { useAsyncDispatch } from '@commercetools-frontend/sdk';
 import { fetchMessageBodyObject, updateMessageBodyObject } from "../../hooks/messages.hook";
 import Loader from "../loader";
 
+import { validateTemplate } from "../../utils/messageBody.utils";
+
 type TEditMessagesProps = {
     linkToNotifications: string;
 };
 
 const EditMessages = ({ linkToNotifications }: TEditMessagesProps) => {
-    // const [messageContent, setMessageContent] = useState<MessageBodyResult[]>([]);
     const [selectedMethod, setSelectedMethod] = useState("whatsapp");
     const [editedMessage, setEditedMessage] = useState("");
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
+    const [validationErrors, setValidationErrors] = useState<string[]>([]);
     const dispatch = useAsyncDispatch();
 
     const loadMessages = useCallback(async () => {
         try {
             const results = await fetchMessageBodyObject(dispatch);
-            // setMessageContent(results);
-            // Only set initial message if editedMessage is empty
             if (!editedMessage) {
                 const selectedMsg = results.find(
                     msg => msg.value.channel.toLowerCase() === selectedMethod.toLowerCase()
@@ -41,7 +40,6 @@ const EditMessages = ({ linkToNotifications }: TEditMessagesProps) => {
             }
         } catch (error) {
             console.error('Failed to load messages:', error);
-            // setMessageContent([]);
         } finally {
             setIsLoading(false);
         }
@@ -51,9 +49,19 @@ const EditMessages = ({ linkToNotifications }: TEditMessagesProps) => {
         loadMessages();
     }, [loadMessages]);
 
+    // Validate template on change
+    const handleTemplateChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const newMessage = event.target.value;
+        setEditedMessage(newMessage);
+
+        // Validate and update error messages
+        const errors = validateTemplate(newMessage); // Use imported validation function
+        setValidationErrors(errors);
+    };
+
     const handleSave = async () => {
         setIsSaving(true);
-        const key: string = selectedMethod === "whatsapp" ? "msg-body-key-constant-whatsapp" : "msg-body-key-constant-other-channel"
+        const key = selectedMethod === "whatsapp" ? "msg-body-key-constant-whatsapp" : "msg-body-key-constant-other-channel";
         try {
             await updateMessageBodyObject(dispatch, {
                 container: "messageBody",
@@ -71,9 +79,7 @@ const EditMessages = ({ linkToNotifications }: TEditMessagesProps) => {
         }
     };
 
-    if (isLoading) return <div className={styles.loadingContainer}>
-        <Loader />
-    </div>;
+    if (isLoading) return <div className={styles.loadingContainer}><Loader /></div>;
 
     return (
         <Spacings.Stack scale="xl">
@@ -89,7 +95,6 @@ const EditMessages = ({ linkToNotifications }: TEditMessagesProps) => {
             </Spacings.Stack>
 
             <Spacings.Stack scale="s">
-
                 <Card theme="light" type="raised">
                     <div className={styles.actionButtons}>
                         <button
@@ -103,27 +108,35 @@ const EditMessages = ({ linkToNotifications }: TEditMessagesProps) => {
                     <Card theme="light" type="raised" className={styles.noteContainer}>
                         <h4>Note</h4>
                         <ul>
-                            <li><b>Mandatory Fields</b>: Ensure that all placeholders are populated with valid data from the <Link isExternal={true} to={"https://docs.commercetools.com/api/projects/orders#order"}>order</Link> response to avoid sending incomplete messages. </li>
-                            <li><b>Character Limits</b>: Consider WhatsApp's character limits (typically 4096 characters for messages) to ensure the message does not get truncated.</li>
-                            <li><b>Dynamic Data</b>: Ensure the order object is fully populated with the necessary attributes (e.g., shippingAddress, id, totalPrice) before generating the message.</li>
+                            <li><b>Mandatory Fields</b>: Ensure all placeholders are populated with valid data from the <Link isExternal={true} to={"https://docs.commercetools.com/api/projects/orders#order"}>order</Link> response to avoid incomplete messages. </li>
+                            <li><b>Character Limits</b>: Consider WhatsApp's character limits (4096 characters for messages) to prevent truncation.</li>
+                            <li><b>Dynamic Data</b>: Ensure the order object has necessary attributes (e.g., shippingAddress, id, totalPrice) populated before generating the message.</li>
                         </ul>
                     </Card>
                     <div className={styles.messageArea}>
-                        <div>
-                            <MultilineTextField
-                                title="Message body"
-                                placeholder="What's your message body"
-                                value={editedMessage}
-                                onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) =>
-                                    setEditedMessage(event.target.value)}
-                                id="messageBodyTextarea"
-                            />
-                        </div>
+                        <MultilineTextField
+                            title="Message body"
+                            placeholder="What's your message body"
+                            value={editedMessage}
+                            onChange={handleTemplateChange}
+                            id="messageBodyTextarea"
+                            // hasError={validationErrors.length > 0}
+                            // error={validationErrors.length > 0 ? validationErrors[0] : ""}
+                        />
+                        {validationErrors.length > 0 && (
+                            <div className={styles.validationErrors}>
+                                <ul>
+                                    {validationErrors.map((error, index) => (
+                                        <li key={index}>{error}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
                     </div>
                     <div className={styles.cardFooter}>
                         <button
                             onClick={handleSave}
-                            disabled={isSaving}
+                            disabled={isSaving || validationErrors.length > 0}
                         >
                             {isSaving ? <div className={styles.loader}></div> : 'Save changes'}
                         </button>
@@ -135,5 +148,3 @@ const EditMessages = ({ linkToNotifications }: TEditMessagesProps) => {
 };
 
 export default EditMessages;
-
-
