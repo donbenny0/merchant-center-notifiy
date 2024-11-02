@@ -12,13 +12,13 @@ const config = {
       initialProjectKey: 'orders-notifications',
     },
     production: {
-      applicationId: 'TODO',
+      applicationId: 'cm30jhvvh0043zcqkfqlnl0zd',
       url: 'https://merchant-center-notifiy.vercel.app/',
     },
   },
   oAuthScopes: {
-    view: ['view_products'],
-    manage: ['manage_project'],
+    view: ['view_orders'],
+    manage: ['manage_orders'],
   },
   icon: '${path:@commercetools-frontend/assets/application-icons/rocket.svg}',
   mainMenuLink: {
@@ -28,7 +28,7 @@ const config = {
   },
   submenuLinks: [
     {
-      uriPath: 'editMessage',
+      uriPath: 'edit-message',
       defaultLabel: 'Edit message',
       labelAllLocales: [],
       permissions: [PERMISSIONS.View],

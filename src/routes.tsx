@@ -25,7 +25,7 @@ const ApplicationRoutes = (_props: ApplicationRoutesProps) => {
   return (
     <Spacings.Inset scale="l">
       <Switch>
-        <Route path={`${match.path}/editMessage`}>
+        <Route path={`${match.path}/edit-message`}>
           <EditMessages linkToNotifications={match.url} />
         </Route>
         <Route path={`${match.path}/logs/:id`}>

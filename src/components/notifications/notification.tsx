@@ -149,7 +149,7 @@ const Notifications = () => {
       <div className={style.headerTile}>
         <Text.Headline as="h1" intlMessage={messages.title} />
         <div className={style.actionButtons}>
-          <Link isExternal={false} to={`${match.url}/editMessage`}>
+          <Link isExternal={false} to={`${match.url}/edit-message`}>
             <SecondaryButton
               iconLeft={<EditIcon />}
               label="Edit message"
