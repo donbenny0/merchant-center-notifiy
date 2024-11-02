@@ -13,7 +13,7 @@ const config = {
     },
     production: {
       applicationId: "${env:APPLICATION_ID}",
-      url: "https://merchant-center-notifiy.vercel.app",
+      url: "https://notifications-taupe.vercel.app",
     },
   },
   oAuthScopes: {
