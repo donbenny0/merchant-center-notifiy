@@ -2,6 +2,8 @@
 import Spacings from "@commercetools-uikit/spacings";
 import Text from "@commercetools-uikit/text";
 import { Link as RouterLink } from "react-router-dom";
+import Link from '@commercetools-uikit/link';
+
 import FlatButton from "@commercetools-uikit/flat-button";
 import { BackIcon } from "@commercetools-uikit/icons";
 import MultilineTextField from '@commercetools-uikit/multiline-text-field';
@@ -11,7 +13,6 @@ import styles from './editMessages.module.css';
 import Card from '@commercetools-uikit/card';
 import whatsappSvg from './whatsapp.svg';
 import { useAsyncDispatch } from '@commercetools-frontend/sdk';
-import { MessageBodyResult } from "../../interfaces/messages.interface";
 import { fetchMessageBodyObject, updateMessageBodyObject } from "../../hooks/messages.hook";
 import Loader from "../loader";
 
@@ -20,7 +21,7 @@ type TEditMessagesProps = {
 };
 
 const EditMessages = ({ linkToNotifications }: TEditMessagesProps) => {
-    const [messageContent, setMessageContent] = useState<MessageBodyResult[]>([]);
+    // const [messageContent, setMessageContent] = useState<MessageBodyResult[]>([]);
     const [selectedMethod, setSelectedMethod] = useState("whatsapp");
     const [editedMessage, setEditedMessage] = useState("");
     const [isLoading, setIsLoading] = useState(true);
@@ -30,7 +31,7 @@ const EditMessages = ({ linkToNotifications }: TEditMessagesProps) => {
     const loadMessages = useCallback(async () => {
         try {
             const results = await fetchMessageBodyObject(dispatch);
-            setMessageContent(results);
+            // setMessageContent(results);
             // Only set initial message if editedMessage is empty
             if (!editedMessage) {
                 const selectedMsg = results.find(
@@ -40,7 +41,7 @@ const EditMessages = ({ linkToNotifications }: TEditMessagesProps) => {
             }
         } catch (error) {
             console.error('Failed to load messages:', error);
-            setMessageContent([]);
+            // setMessageContent([]);
         } finally {
             setIsLoading(false);
         }
@@ -49,10 +50,6 @@ const EditMessages = ({ linkToNotifications }: TEditMessagesProps) => {
     useEffect(() => {
         loadMessages();
     }, [loadMessages]);
-
-    // const selectedMessage = messageContent.find(
-    //     msg => msg.value.channel.toLowerCase() === selectedMethod.toLowerCase()
-    // );
 
     const handleSave = async () => {
         setIsSaving(true);
@@ -92,8 +89,8 @@ const EditMessages = ({ linkToNotifications }: TEditMessagesProps) => {
             </Spacings.Stack>
 
             <Spacings.Stack scale="s">
+
                 <Card theme="light" type="raised">
-                    <Text.Headline as="h3" intlMessage={messages.messageBoxTitle} />
                     <div className={styles.actionButtons}>
                         <button
                             onClick={() => setSelectedMethod("whatsapp")}
@@ -103,7 +100,14 @@ const EditMessages = ({ linkToNotifications }: TEditMessagesProps) => {
                             <span>WhatsApp</span>
                         </button>
                     </div>
-
+                    <Card theme="light" type="raised" className={styles.noteContainer}>
+                        <h4>Note</h4>
+                        <ul>
+                            <li><b>Mandatory Fields</b>: Ensure that all placeholders are populated with valid data from the <Link isExternal={true} to={"https://docs.commercetools.com/api/projects/orders#order"}>order</Link> response to avoid sending incomplete messages. </li>
+                            <li><b>Character Limits</b>: Consider WhatsApp's character limits (typically 4096 characters for messages) to ensure the message does not get truncated.</li>
+                            <li><b>Dynamic Data</b>: Ensure the order object is fully populated with the necessary attributes (e.g., shippingAddress, id, totalPrice) before generating the message.</li>
+                        </ul>
+                    </Card>
                     <div className={styles.messageArea}>
                         <div>
                             <MultilineTextField
@@ -121,7 +125,7 @@ const EditMessages = ({ linkToNotifications }: TEditMessagesProps) => {
                             onClick={handleSave}
                             disabled={isSaving}
                         >
-                            {isSaving ? 'Saving...' : 'Save'}
+                            {isSaving ? <div className={styles.loader}></div> : 'Save changes'}
                         </button>
                     </div>
                 </Card>
@@ -131,3 +135,5 @@ const EditMessages = ({ linkToNotifications }: TEditMessagesProps) => {
 };
 
 export default EditMessages;
+
+

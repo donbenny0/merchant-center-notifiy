@@ -18,6 +18,7 @@ import { NotificationResult } from '../../interfaces/notifications.interface';
 import { fetchAllNotificationsObject } from '../../hooks/notifications.hook';
 import { filterRows, toSentenceCase } from '../../utils/notifications.utils';
 import Loader from '../loader';
+import * as XLSX from 'xlsx';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -131,6 +132,13 @@ const Notifications = () => {
     }));
   }, []);
 
+  const handleExport = useCallback(() => {
+    const worksheet = XLSX.utils.json_to_sheet(sortedRows);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Notifications");
+    XLSX.writeFile(workbook, "notifications.xlsx");
+  }, [sortedRows]);
+
   const searchPlaceholder = useMemo(() =>
     `Search${filterField !== 'all' ? ` by ${filterOptions.find(opt => opt.value === filterField)?.label}` : '...'}`,
     [filterField]
@@ -150,6 +158,7 @@ const Notifications = () => {
           <SecondaryButton
             iconLeft={<ExportIcon />}
             label="Export"
+            onClick={handleExport}
           />
         </div>
 
