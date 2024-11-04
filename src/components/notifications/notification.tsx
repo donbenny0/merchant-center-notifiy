@@ -17,6 +17,7 @@ import { useRouteMatch } from 'react-router-dom';
 import { NotificationResult } from '../../interfaces/notifications.interface';
 import { fetchAllNotificationsObject } from '../../hooks/notifications.hook';
 import { filterRows, toSentenceCase } from '../../utils/notifications.utils';
+import noDataImg from './nodata.png'
 import Loader from '../loader';
 import * as XLSX from 'xlsx';
 
@@ -164,69 +165,74 @@ const Notifications = () => {
 
       </div>
       <Text.Subheadline as='h5' intlMessage={messages.subtitle} />
+      <>
+        {isLoading ? (
+          <div className={style.loadingContainer}>
+            <Loader />
+          </div>
+        ) : paginatedRows.length === 0 ? (
+          <div className={style.noDataFoudContainer}>
+            <img className={style.noDataImg} src={noDataImg} alt="" />
+            <span>Looks like my notification inbox is as empty as my fridge after midnight!</span>
+          </div>
+        ) : (
+          <>
+            <Spacings.Inline scale="m" alignItems="center">
+              <div style={{ flex: 1 }}>
+                {filterField === 'date' ? (
+                  <DateInput
+                    value={dateFilter}
+                    onChange={(event) => handleDateChange({ target: { value: event.target.value || '' } })}
+                    horizontalConstraint="scale"
+                  />
+                ) : (
+                  <TextInput
+                    value={filterField === 'all' ? searchTerm : filterValue}
+                    onChange={handleSearchChange}
+                    placeholder={searchPlaceholder}
+                  />
+                )}
+              </div>
+              <div style={{ width: '200px' }}>
+                <SelectField
+                  horizontalConstraint="scale"
+                  name="filter"
+                  title=""
+                  value={filterField}
+                  options={filterOptions}
+                  onChange={(event) => handleFilterChange({ target: { value: event.target.value as string } })}
+                  touched={true}
+                  errors={{}}
+                  isRequired={false}
+                />
+              </div>
+            </Spacings.Inline>
 
-      <Spacings.Inline scale="m" alignItems="center">
-        <div style={{ flex: 1 }}>
-          {filterField === 'date' ? (
-            <DateInput
-              value={dateFilter}
-              onChange={(event) => handleDateChange({ target: { value: event.target.value || '' } })}
-              horizontalConstraint="scale"
-            />
-          ) : (
-            <TextInput
-              value={filterField === 'all' ? searchTerm : filterValue}
-              onChange={handleSearchChange}
-              placeholder={searchPlaceholder}
-            />
-          )}
-        </div>
-        <div style={{ width: '200px' }}>
-          <SelectField
-            horizontalConstraint="scale"
-            name="filter"
-            title=""
-            value={filterField}
-            options={filterOptions}
-            onChange={(event) => handleFilterChange({ target: { value: event.target.value as string } })}
-            touched={true}
-            errors={{}}
-            isRequired={false}
-          />
-        </div>
-      </Spacings.Inline>
+            <DataTableManager columns={columns}>
+              <DataTable
+                maxHeight="350px"
+                rows={paginatedRows}
+                columns={columns}
+                sortedBy={sortBy.key}
+                sortDirection={sortBy.order}
+                onSortChange={handleColumnSort}
+                onRowClick={(row) => {
+                  window.history.pushState({}, '', `${match.url}/logs/${row.id}`);
+                  window.dispatchEvent(new PopStateEvent('popstate'));
+                }}
+              />
+            </DataTableManager>
 
-      {isLoading ? (
-        <div className={style.loadingContainer}>
-          <Loader />
-        </div>
-      ) : (
-        <>
-          <DataTableManager columns={columns}>
-            <DataTable
-              maxHeight="350px"
-              rows={paginatedRows}
-              columns={columns}
-              sortedBy={sortBy.key}
-              sortDirection={sortBy.order}
-              onSortChange={handleColumnSort}
-              onRowClick={(row) => {
-                window.history.pushState({}, '', `${match.url}/logs/${row.id}`);
-                window.dispatchEvent(new PopStateEvent('popstate'));
-              }}
+            <Pagination
+              page={page}
+              onPageChange={setPage}
+              perPage={perPage}
+              onPerPageChange={setPerPage}
+              totalItems={filteredRows.length}
             />
-          </DataTableManager>
-
-          <Pagination
-            page={page}
-            onPageChange={setPage}
-            perPage={perPage}
-            onPerPageChange={setPerPage}
-            totalItems={filteredRows.length}
-          />
-        </>
-      )}
-    </Spacings.Stack>
+          </>
+        )}
+      </>    </Spacings.Stack>
   );
 };
 
