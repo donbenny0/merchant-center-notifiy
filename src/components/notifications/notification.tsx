@@ -156,11 +156,12 @@ const Notifications = () => {
               label="Edit message"
             />
           </Link>
-          <SecondaryButton
+          {paginatedRows.length === 0 ? (<></>) : (<><SecondaryButton
             iconLeft={<ExportIcon />}
             label="Export"
             onClick={handleExport}
-          />
+          /></>)}
+
         </div>
 
       </div>
