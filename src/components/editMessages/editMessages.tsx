@@ -4,7 +4,7 @@ import { Link as RouterLink } from "react-router-dom";
 import Link from '@commercetools-uikit/link';
 
 import FlatButton from "@commercetools-uikit/flat-button";
-import { BackIcon } from "@commercetools-uikit/icons";
+import { BackIcon, InformationIcon } from "@commercetools-uikit/icons";
 import MultilineTextField from '@commercetools-uikit/multiline-text-field';
 import messages from "./messages";
 import { useCallback, useEffect, useState } from "react";
@@ -22,7 +22,6 @@ type TEditMessagesProps = {
     linkToNotifications: string;
 };
 
-
 const EditMessages = ({ linkToNotifications }: TEditMessagesProps) => {
     const [selectedMethod, setSelectedMethod] = useState("whatsapp");
     const [editedMessage, setEditedMessage] = useState("");
@@ -30,10 +29,11 @@ const EditMessages = ({ linkToNotifications }: TEditMessagesProps) => {
     const [isSaving, setIsSaving] = useState(false);
     const [validationErrors, setValidationErrors] = useState<string[]>([]);
     const [hasLoaded, setHasLoaded] = useState(false);
+    const [showNotes, setShowNotes] = useState(false);
 
     const dispatch = useAsyncDispatch();
     const intl = useIntl();
-    const showNotification = useShowNotification(); // Hook for showing notifications
+    const showNotification = useShowNotification();
 
     const loadMessages = useCallback(async () => {
         try {
@@ -76,8 +76,6 @@ const EditMessages = ({ linkToNotifications }: TEditMessagesProps) => {
                 },
             });
             loadMessages();
-
-            // Show success notification
             showNotification({
                 kind: 'success',
                 domain: 'side',
@@ -122,16 +120,25 @@ const EditMessages = ({ linkToNotifications }: TEditMessagesProps) => {
                                     <img alt="web developer" src={whatsappSvg} />
                                     <span>WhatsApp</span>
                                 </button>
+                                <FlatButton
+                                    icon={<InformationIcon />}
+                                    onClick={() => setShowNotes(!showNotes)}
+                                    label="Show guidelines"
+                                />
                             </div>
-                            <Card theme="light" type="raised" className={styles.noteContainer}>
-                                <h4>Note :</h4>
-                                <ul style={{ lineHeight: '1.5' }}>
-                                    <li><b>Mandatory Fields</b>: Ensure all placeholders are populated with valid data from the <Link isExternal={true} to={"https://docs.commercetools.com/api/projects/orders#order"}>order</Link> response to avoid incomplete messages. </li>
-                                    <li><b>Character Limits</b>: Consider WhatsApp's character limits (4096 characters for messages) to prevent truncation.</li>
-                                    <li><b>Dynamic Data</b>: Ensure the order object has necessary attributes (e.g., shippingAddress, id, totalPrice) populated before generating the message.</li>
-                                    <li><b>Supported resource</b>: Currently, this application supports only the order resource. Please refer <Link isExternal={true} to={"https://docs.commercetools.com/api/projects/orders#order"}>CommerceTools official documentation</Link> for order resource and its attributes for more details.</li>
-                                </ul>
-                            </Card>
+                            
+                            {showNotes && (
+                                <Card theme="light" type="raised" className={styles.noteContainer}>
+                                    <h4>Note :</h4>
+                                    <ul style={{ lineHeight: '1.5' }}>
+                                        <li><b>Mandatory Fields</b>: Ensure all placeholders are populated with valid data from the <Link isExternal={true} to={"https://docs.commercetools.com/api/projects/orders#order"}>order</Link> response to avoid incomplete messages. </li>
+                                        <li><b>Character Limits</b>: Consider WhatsApp's character limits (4096 characters for messages) to prevent truncation.</li>
+                                        <li><b>Dynamic Data</b>: Ensure the order object has necessary attributes (e.g., shippingAddress, id, totalPrice) populated before generating the message.</li>
+                                        <li><b>Supported resource</b>: Currently, this application supports only the order resource. Please refer <Link isExternal={true} to={"https://docs.commercetools.com/api/projects/orders#order"}>CommerceTools official documentation</Link> for order resource and its attributes for more details.</li>
+                                    </ul>
+                                </Card>
+                            )}
+
                             <div className={styles.messageArea}>
                                 <MultilineTextField
                                     title="Message body"

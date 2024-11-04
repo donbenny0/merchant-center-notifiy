@@ -1,6 +1,7 @@
 .actionButtons {
     margin-top: 10px;
     display: flex;
+    justify-content: space-between;
     flex-direction: row;
 }
 
@@ -16,6 +17,11 @@
     color: black;
     font-weight: 500;
 
+}
+
+.actionButtons button:nth-child(2) {
+    background-color: transparent;
+    border: 1px solid rgba(128, 128, 128, 0.221);
 }
 
 .actionButtons img {
@@ -100,6 +106,20 @@
 .noteContainer {
     margin-top: 15px;
     font-size: 16px;
+    transition: 2s linear;
+    animation: revealContainer 0.5s ease-in-out;
+    opacity: 1;
+}
+
+@keyframes revealContainer {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 
