@@ -182,7 +182,7 @@ const Notifications = () => {
       <>
         {isLoading ? (
           <></>
-        ) : paginatedRows.length === 0 && searchTerm === null ? (
+        ) : paginatedRows.length === 0 && searchTerm === '' ? (
           <></>
         ) : (
           <>
