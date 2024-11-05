@@ -166,29 +166,24 @@ const Notifications = () => {
               label="Edit message"
             />
           </Link>
-          <SecondaryButton
+
+          {paginatedRows.length === 0 ? (<></>) : (<>  <SecondaryButton
             iconLeft={<RefreshIcon />}
             label="Refresh"
             onClick={handleRefresh}
-          />
-          {paginatedRows.length === 0 ? (<></>) : (<><SecondaryButton
-            iconLeft={<ExportIcon />}
-            label="Export"
-            onClick={handleExport}
-          /></>)}
+          /><SecondaryButton
+              iconLeft={<ExportIcon />}
+              label="Export"
+              onClick={handleExport}
+            /></>)}
         </div>
       </div>
       <Text.Subheadline as='h5' intlMessage={messages.subtitle} />
       <>
         {isLoading ? (
-          <div className={style.loadingContainer}>
-            <Loader />
-          </div>
-        ) : paginatedRows.length === 0 ? (
-          <div className={style.noDataFoudContainer}>
-            <img className={style.noDataImg} src={noDataImg} alt="" />
-            <span>Looks like my notification inbox is as empty as my fridge after midnight!</span>
-          </div>
+          <></>
+        ) : paginatedRows.length === 0 && searchTerm === null ? (
+          <></>
         ) : (
           <>
             <Spacings.Inline scale="m" alignItems="center">
@@ -221,7 +216,19 @@ const Notifications = () => {
                 />
               </div>
             </Spacings.Inline>
-
+          </>
+        )}
+        {isLoading ? (
+          <div className={style.loadingContainer}>
+            <Loader />
+          </div>
+        ) : paginatedRows.length === 0 ? (
+          <div className={style.noDataFoudContainer}>
+            <img className={style.noDataImg} src={noDataImg} alt="" />
+            <span>Looks like my notification inbox is as empty as my fridge after midnight!</span>
+          </div>
+        ) : (
+          <>
             <DataTableManager columns={columns}>
               <DataTable
                 maxHeight="350px"
