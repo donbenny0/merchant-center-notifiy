@@ -66,12 +66,16 @@ const LogsPage = ({ linkToNotifications }: TLogsPageProps) => {
                     <span>{logStatestate.value?.logs?.statusCode}</span>
                 </div>
                 <Card theme="dark" type="raised">
-                    <h6>Message</h6>
-                    <br />
+                    <div className={styles.messageAndTime}>
+                        <h6>Message</h6>
+                        <span>{logStatestate.createdAt ? new Date(logStatestate.createdAt).toLocaleDateString('en-US', { weekday: 'long' }) : ''}, {logStatestate.createdAt ? new Date(logStatestate.createdAt).toLocaleString() : ''}</span>
+                    </div>
+<br />
                     <code>{logStatestate.value?.logs?.message}</code>
+
                 </Card>
             </div>
-        </Spacings.Stack>
+        </Spacings.Stack >
     )
 }
 

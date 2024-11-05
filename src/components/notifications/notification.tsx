@@ -7,7 +7,7 @@ import DataTableManager from '@commercetools-uikit/data-table-manager';
 import TextInput from '@commercetools-uikit/text-input';
 import { Pagination } from '@commercetools-uikit/pagination';
 import SecondaryButton from '@commercetools-uikit/secondary-button';
-import { EditIcon, ExportIcon } from '@commercetools-uikit/icons';
+import { EditIcon, ExportIcon, RefreshIcon } from '@commercetools-uikit/icons';
 import SelectField from '@commercetools-uikit/select-field';
 import DateInput from '@commercetools-uikit/date-input';
 import style from './notifications.module.css';
@@ -29,6 +29,7 @@ const columns = [
   { key: 'channel', label: 'Channel', isSortable: true },
   { key: 'status', label: 'Status', isSortable: true },
   { key: 'createdAt', label: 'Notified On', isSortable: true },
+  { key: 'timestamp', label: 'Time', isSortable: true },
 ];
 
 const filterOptions = [
@@ -73,14 +74,18 @@ const Notifications = () => {
     loadNotifications();
   }, [loadNotifications]);
 
-  const rows = useMemo(() => notifications.map(notification => ({
-    id: notification.id,
-    resourceType: toSentenceCase(notification.value.resourceType),
-    recipient: notification.value.recipient,
-    channel: toSentenceCase(notification.value.channel),
-    status: toSentenceCase(notification.value.status),
-    createdAt: new Date(notification.createdAt).toLocaleDateString(),
-  })), [notifications]);
+  const rows = useMemo(() => notifications.map(notification => {
+    const date = new Date(notification.createdAt);
+    return {
+      id: notification.id,
+      resourceType: toSentenceCase(notification.value.resourceType),
+      recipient: notification.value.recipient,
+      channel: toSentenceCase(notification.value.channel),
+      status: toSentenceCase(notification.value.status),
+      createdAt: date.toLocaleDateString(),
+      timestamp: date.toLocaleTimeString(),
+    };
+  }), [notifications]);
 
   const filteredRows = useMemo(() => {
     let filtered = filterRows(rows, searchTerm, filterValue, filterField);
@@ -140,6 +145,11 @@ const Notifications = () => {
     XLSX.writeFile(workbook, "notifications.xlsx");
   }, [sortedRows]);
 
+  const handleRefresh = useCallback(() => {
+    setIsLoading(true);
+    loadNotifications();
+  }, [loadNotifications]);
+
   const searchPlaceholder = useMemo(() =>
     `Search${filterField !== 'all' ? ` by ${filterOptions.find(opt => opt.value === filterField)?.label}` : '...'}`,
     [filterField]
@@ -156,14 +166,17 @@ const Notifications = () => {
               label="Edit message"
             />
           </Link>
+          <SecondaryButton
+            iconLeft={<RefreshIcon />}
+            label="Refresh"
+            onClick={handleRefresh}
+          />
           {paginatedRows.length === 0 ? (<></>) : (<><SecondaryButton
             iconLeft={<ExportIcon />}
             label="Export"
             onClick={handleExport}
           /></>)}
-
         </div>
-
       </div>
       <Text.Subheadline as='h5' intlMessage={messages.subtitle} />
       <>
