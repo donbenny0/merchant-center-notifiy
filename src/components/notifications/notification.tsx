@@ -21,7 +21,7 @@ import noDataImg from './nodata.png'
 import Loader from '../loader';
 import * as XLSX from 'xlsx';
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE: number = 10;
 
 const columns = [
   { key: 'resourceType', label: 'Resource Type', isSortable: true },
@@ -57,9 +57,9 @@ const Notifications = () => {
     order: 'desc'
   });
 
-  const loadNotifications = useCallback(async () => {
+  const loadNotifications = useCallback(async (limit: number) => {
     try {
-      const results = await fetchAllNotificationsObject(dispatch);
+      const results = await fetchAllNotificationsObject(dispatch, limit);
       setNotifications(results);
     } catch (error) {
       console.error('Failed to load notifications:', error);
@@ -71,8 +71,8 @@ const Notifications = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    loadNotifications();
-  }, [loadNotifications]);
+    loadNotifications(perPage);
+  }, [loadNotifications, perPage]);
 
   const rows = useMemo(() => notifications.map(notification => {
     const date = new Date(notification.createdAt);
@@ -91,7 +91,11 @@ const Notifications = () => {
     let filtered = filterRows(rows, searchTerm, filterValue, filterField);
 
     if (dateFilter && filterField === 'date') {
-      filtered = filtered.filter(row => row.createdAt === new Date(dateFilter).toLocaleDateString());
+      const filterDate = new Date(dateFilter).toLocaleDateString();
+      filtered = filtered.filter(row => {
+        const rowDate = new Date(row.createdAt).toLocaleDateString();
+        return rowDate === filterDate;
+      });
     }
 
     return filtered;
@@ -147,7 +151,7 @@ const Notifications = () => {
 
   const handleRefresh = useCallback(() => {
     setIsLoading(true);
-    loadNotifications();
+    loadNotifications(perPage);
   }, [loadNotifications]);
 
   const searchPlaceholder = useMemo(() =>
@@ -167,24 +171,19 @@ const Notifications = () => {
             />
           </Link>
 
-          {paginatedRows.length === 0 ? (<></>) : (<>  <SecondaryButton
-            iconLeft={<RefreshIcon />}
-            label="Refresh"
-            onClick={handleRefresh}
-          /><SecondaryButton
-              iconLeft={<ExportIcon />}
-              label="Export"
-              onClick={handleExport}
-            /></>)}
+          {paginatedRows.length === 0 ? (<></>)
+            : (
+              <>
+                <SecondaryButton iconLeft={<RefreshIcon />} label="Refresh" onClick={handleRefresh} />
+                <SecondaryButton iconLeft={<ExportIcon />} label="Export" onClick={handleExport} />
+                {/* <SecondaryButton iconLeft={<ExportIcon />} label="Del" onClick={() => { deleteAllCustomObjects(dispatch) }} /> */}
+              </>
+            )}
         </div>
       </div>
       <Text.Subheadline as='h5' intlMessage={messages.subtitle} />
       <>
-        {isLoading ? (
-          <></>
-        ) : paginatedRows.length === 0 && searchTerm === '' ? (
-          <></>
-        ) : (
+        {isLoading ? null : (
           <>
             <Spacings.Inline scale="m" alignItems="center">
               <div style={{ flex: 1 }}>
@@ -217,8 +216,7 @@ const Notifications = () => {
               </div>
             </Spacings.Inline>
           </>
-        )}
-        {isLoading ? (
+        )}        {isLoading ? (
           <div className={style.loadingContainer}>
             <Loader />
           </div>
@@ -253,7 +251,8 @@ const Notifications = () => {
             />
           </>
         )}
-      </>    </Spacings.Stack>
+      </>
+    </Spacings.Stack>
   );
 };
 
