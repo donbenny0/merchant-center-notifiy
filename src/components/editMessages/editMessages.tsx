@@ -4,7 +4,7 @@ import { Link as RouterLink } from "react-router-dom";
 import Link from '@commercetools-uikit/link';
 
 import FlatButton from "@commercetools-uikit/flat-button";
-import { BackIcon, InformationIcon } from "@commercetools-uikit/icons";
+import { BackIcon, InformationIcon, EyeIcon, EyeCrossedIcon } from "@commercetools-uikit/icons";
 import MultilineTextField from '@commercetools-uikit/multiline-text-field';
 import messages from "./messages";
 import { useCallback, useEffect, useState } from "react";
@@ -12,12 +12,13 @@ import styles from './editMessages.module.css';
 import Card from '@commercetools-uikit/card';
 import whatsappSvg from './whatsapp.svg';
 import { useAsyncDispatch } from '@commercetools-frontend/sdk';
-import { fetchMessageBodyObject, updateMessageBodyObject } from "../../hooks/messages.hook";
+import { fetchMessageBodyObject, fetchOrders, updateMessageBodyObject } from "../../repository/messages.repository";
 import Loader from "../loader";
 import { validateTemplate } from "../../utils/messageBody.utils";
 import { useShowNotification } from '@commercetools-frontend/actions-global';
 import { useIntl } from 'react-intl';
-
+import SelectField from "@commercetools-uikit/select-field";
+import { generateMessage } from "../../utils/messageTemplate.utils";
 type TEditMessagesProps = {
     linkToNotifications: string;
 };
@@ -30,6 +31,10 @@ const EditMessages = ({ linkToNotifications }: TEditMessagesProps) => {
     const [validationErrors, setValidationErrors] = useState<string[]>([]);
     const [hasLoaded, setHasLoaded] = useState(false);
     const [showNotes, setShowNotes] = useState(false);
+    const [showPreview, setPreview] = useState(false);
+    const [orders, setOrders] = useState<any[]>([]);
+    const [renderedMessage, setRenderedMessage] = useState('');
+
 
     const dispatch = useAsyncDispatch();
     const intl = useIntl();
@@ -64,6 +69,9 @@ const EditMessages = ({ linkToNotifications }: TEditMessagesProps) => {
     };
 
     const handleSave = async () => {
+        setPreview(false)
+        setShowNotes(false)
+        setRenderedMessage('')
         setIsSaving(true);
         const key = selectedMethod === "whatsapp" ? "msg-body-key-constant-whatsapp" : "msg-body-key-constant-other-channel";
         try {
@@ -93,6 +101,29 @@ const EditMessages = ({ linkToNotifications }: TEditMessagesProps) => {
         }
     };
 
+    const handleNotes = (showNotes: boolean) => {
+        setPreview(false)
+        setShowNotes(showNotes)
+    }
+    const handlePreview = async (preview: boolean) => {
+        setShowNotes(false)
+        setPreview(preview)
+        if (preview) {
+            const response = await fetchOrders(dispatch);
+            setOrders(response);
+        }
+    }
+
+    const handlePreviewRender = (data: object[], template: string, orderId: string) => {
+        const selectedOrder = data.find((item: any) => item.id === orderId);
+        if (!selectedOrder) {
+            return null;
+        }
+        const message = generateMessage(selectedOrder, template);
+        setRenderedMessage(message); // Fixed typo in state setter name
+        return message;
+    }
+
     return (
         <Spacings.Stack scale="xl">
             {isLoading ? (
@@ -113,20 +144,21 @@ const EditMessages = ({ linkToNotifications }: TEditMessagesProps) => {
                     <Spacings.Stack scale="s">
                         <Card theme="light" type="raised">
                             <div className={styles.actionButtons}>
-                                <button
-                                    onClick={() => setSelectedMethod("whatsapp")}
-                                    className={selectedMethod === "whatsapp" ? styles.active : ""}
-                                >
-                                    <img alt="web developer" src={whatsappSvg} />
-                                    <span>WhatsApp</span>
-                                </button>
-                                <FlatButton
-                                    icon={<InformationIcon />}
-                                    onClick={() => setShowNotes(!showNotes)}
-                                    label="Show guidelines"
-                                />
+                                <div>
+                                    <button
+                                        onClick={() => setSelectedMethod("whatsapp")}
+                                        className={selectedMethod === "whatsapp" ? styles.active : ""}>
+                                        <img alt="web developer" src={whatsappSvg} />
+                                        <span>WhatsApp</span>
+                                    </button>
+                                </div>
+
+                                <div className={styles.rightSideButtons}>
+                                    <FlatButton icon={<InformationIcon />} onClick={() => handleNotes(!showNotes)} label="Show guidelines" />
+                                    <FlatButton icon={showPreview ? <EyeCrossedIcon /> : <EyeIcon />} onClick={() => handlePreview(!showPreview)} label={showPreview ? 'Hide preview' : 'Preview'} />
+                                </div>
                             </div>
-                            
+
                             {showNotes && (
                                 <Card theme="light" type="raised" className={styles.noteContainer}>
                                     <h4>Note :</h4>
@@ -136,6 +168,34 @@ const EditMessages = ({ linkToNotifications }: TEditMessagesProps) => {
                                         <li><b>Dynamic Data</b>: Ensure the order object has necessary attributes (e.g., shippingAddress, id, totalPrice) populated before generating the message.</li>
                                         <li><b>Supported resource</b>: Currently, this application supports only the order resource. Please refer <Link isExternal={true} to={"https://docs.commercetools.com/api/projects/orders#order"}>CommerceTools official documentation</Link> for order resource and its attributes for more details.</li>
                                     </ul>
+                                </Card>
+                            )}
+
+                            {showPreview && (
+                                <Card theme="light" type="raised" className={styles.noteContainer}>
+                                    <SelectField
+                                        title="Select your order"
+                                        name="order-select"
+                                        value={{
+                                            label: 'Default Template',
+                                            value: 'default'
+                                        }}
+                                        options={orders.map(order => ({
+                                            label: order.lineItems.map((item: any) => item.variant.sku).join(', '),
+                                            value: order.id
+                                        }))}
+                                        onChange={(event) => {
+                                            // Handle template selection
+                                            handlePreviewRender(orders, editedMessage, event.target.value as string)
+                                        }}
+                                    />
+                                    {renderedMessage !== '' ? (
+                                        <div className={styles.previewContainer}>
+                                            <h4>Preview :</h4>
+                                            <br />
+                                            <p>{renderedMessage}</p>
+                                        </div>
+                                    ) : null}
                                 </Card>
                             )}
 

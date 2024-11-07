@@ -37,3 +37,19 @@ export const updateMessageBodyObject = async (dispatch: any, payload: object) =>
     }
 };
 
+export const fetchOrders = async (dispatch: any) => {
+    try {
+        const result = await dispatch(
+            actions.get({
+                mcApiProxyTarget: MC_API_PROXY_TARGETS.COMMERCETOOLS_PLATFORM,
+                service: 'orders',
+                options: {},
+            })
+        ) as ApiResponse;
+
+        return result.results;
+    } catch (error) {
+        console.error('Error fetching orders:', error);
+        throw error;
+    }
+};

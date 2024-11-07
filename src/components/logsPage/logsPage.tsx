@@ -6,7 +6,7 @@ import FlatButton from "@commercetools-uikit/flat-button";
 import { BackIcon } from "@commercetools-uikit/icons";
 import messages from "./messages";
 import { useCallback, useEffect, useState } from "react";
-import { fetchNotificationsObject } from "../../hooks/notifications.hook";
+import { fetchNotificationsObject } from "../../repository/notifications.repository";
 import { useAsyncDispatch } from '@commercetools-frontend/sdk';
 import { LogState } from "../../interfaces/LogState.interface";
 import Card from '@commercetools-uikit/card';

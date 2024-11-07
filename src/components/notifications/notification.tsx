@@ -15,7 +15,7 @@ import { useAsyncDispatch } from '@commercetools-frontend/sdk';
 import Link from '@commercetools-uikit/link';
 import { useRouteMatch } from 'react-router-dom';
 import { NotificationResult } from '../../interfaces/notifications.interface';
-import { fetchAllNotificationsObject } from '../../hooks/notifications.hook';
+import { fetchAllNotificationsObject } from '../../repository/notifications.repository';
 import { filterRows, toSentenceCase } from '../../utils/notifications.utils';
 import noDataImg from './nodata.png'
 import Loader from '../loader';
