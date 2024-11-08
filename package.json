@@ -63,6 +63,7 @@
     "@commercetools-uikit/text": "^19.9.0",
     "@commercetools-uikit/text-field": "^19.9.0",
     "@commercetools-uikit/text-input": "^19.9.0",
+    "@commercetools-uikit/view-switcher": "^19.15.0",
     "@commercetools/sync-actions": "^5.14.0",
     "@emotion/react": "^11.11.4",
     "@formatjs/cli": "6.2.12",
