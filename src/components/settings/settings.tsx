@@ -8,7 +8,7 @@ import { BackIcon, InformationIcon, EyeIcon, EyeCrossedIcon } from "@commercetoo
 import MultilineTextField from '@commercetools-uikit/multiline-text-field';
 import messages from "./messages";
 import { useCallback, useEffect, useState } from "react";
-import styles from './editMessages.module.css';
+import styles from './settings.module.css';
 import Card from '@commercetools-uikit/card';
 import whatsappSvg from './whatsapp.svg';
 import { useAsyncDispatch } from '@commercetools-frontend/sdk';
@@ -18,7 +18,7 @@ import { validateTemplate } from "../../utils/messageBody.utils";
 import { useShowNotification } from '@commercetools-frontend/actions-global';
 import { useIntl } from 'react-intl';
 import SelectField from "@commercetools-uikit/select-field";
-import { generateMessage } from "../../utils/messageTemplate.utils";
+import {generateMessage } from "../../utils/messageTemplate.utils";
 type TEditMessagesProps = {
     linkToNotifications: string;
 };
@@ -73,6 +73,7 @@ const EditMessages = ({ linkToNotifications }: TEditMessagesProps) => {
         setShowNotes(false)
         setRenderedMessage('')
         setIsSaving(true);
+
         const key = selectedMethod === "whatsapp" ? "msg-body-key-constant-whatsapp" : "msg-body-key-constant-other-channel";
         try {
             await updateMessageBodyObject(dispatch, {
@@ -113,6 +114,8 @@ const EditMessages = ({ linkToNotifications }: TEditMessagesProps) => {
             setOrders(response);
         }
     }
+
+
 
     const handlePreviewRender = (data: object[], template: string, orderId: string) => {
         const selectedOrder = data.find((item: any) => item.id === orderId);
@@ -155,7 +158,7 @@ const EditMessages = ({ linkToNotifications }: TEditMessagesProps) => {
 
                                 <div className={styles.rightSideButtons}>
                                     <FlatButton icon={<InformationIcon />} onClick={() => handleNotes(!showNotes)} label="Show guidelines" />
-                                    <FlatButton icon={showPreview ? <EyeCrossedIcon /> : <EyeIcon />} onClick={() => handlePreview(!showPreview)} label={showPreview ? 'Hide preview' : 'Preview'} />
+                                    {editedMessage === '' ? (<></>) : (<FlatButton icon={showPreview ? <EyeCrossedIcon /> : <EyeIcon />} onClick={() => handlePreview(!showPreview)} label={showPreview ? 'Hide preview' : 'Preview'} />)}
                                 </div>
                             </div>
 
@@ -193,8 +196,9 @@ const EditMessages = ({ linkToNotifications }: TEditMessagesProps) => {
                                         <div className={styles.previewContainer}>
                                             <h4>Preview :</h4>
                                             <br />
-                                            <p>{renderedMessage}</p>
+                                            <p dangerouslySetInnerHTML={{ __html: renderedMessage.replace(/\n/g, '<br />') }}></p>
                                         </div>
+
                                     ) : null}
                                 </Card>
                             )}
@@ -204,6 +208,12 @@ const EditMessages = ({ linkToNotifications }: TEditMessagesProps) => {
                                     title="Message body"
                                     placeholder="What's your message body"
                                     value={editedMessage}
+                                    onFocus={() => {
+                                        setPreview(false)
+                                        setRenderedMessage('')
+                                    }}
+                                    defaultExpandMultilineText={true}
+
                                     onChange={handleTemplateChange}
                                     id="messageBodyTextarea"
                                 />

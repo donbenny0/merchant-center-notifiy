@@ -1,7 +1,7 @@
 import { lazy } from 'react';
 
 const EditMessages = lazy(
-    () => import('./editMessages' /* webpackChunkName: "editMessages" */)
+    () => import('./settings' /* webpackChunkName: "editMessages" */)
 );
 
 export default EditMessages;

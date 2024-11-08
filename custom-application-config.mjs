@@ -28,8 +28,8 @@ const config = {
   },
   submenuLinks: [
     {
-      uriPath: 'edit-message',
-      defaultLabel: 'Edit message',
+      uriPath: 'settings',
+      defaultLabel: 'Notification settings',
       labelAllLocales: [],
       permissions: [PERMISSIONS.View],
     },

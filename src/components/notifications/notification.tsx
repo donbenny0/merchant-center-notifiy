@@ -7,7 +7,7 @@ import DataTableManager from '@commercetools-uikit/data-table-manager';
 import TextInput from '@commercetools-uikit/text-input';
 import { Pagination } from '@commercetools-uikit/pagination';
 import SecondaryButton from '@commercetools-uikit/secondary-button';
-import { EditIcon, ExportIcon, RefreshIcon } from '@commercetools-uikit/icons';
+import { GearIcon, ExportIcon, RefreshIcon } from '@commercetools-uikit/icons';
 import SelectField from '@commercetools-uikit/select-field';
 import DateInput from '@commercetools-uikit/date-input';
 import style from './notifications.module.css';
@@ -164,10 +164,10 @@ const Notifications = () => {
       <div className={style.headerTile}>
         <Text.Headline as="h1" intlMessage={messages.title} />
         <div className={style.actionButtons}>
-          <Link isExternal={false} to={`${match.url}/edit-message`}>
+          <Link isExternal={false} to={`${match.url}/settings`}>
             <SecondaryButton
-              iconLeft={<EditIcon />}
-              label="Edit message"
+              iconLeft={<GearIcon />}
+              label="Settings"
             />
           </Link>
 

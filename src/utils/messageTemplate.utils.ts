@@ -58,3 +58,12 @@ export const generateMessage = (data: object, template: string): string => {
         }
     });
 };
+
+
+export const formatUserInput = (input: string) => {
+    return input.replace(/\n/g, '\\n');
+}
+export const formatEditedInput = (input: string) => {
+    return input.replace(/\n/g, '\n\n');
+}
+
