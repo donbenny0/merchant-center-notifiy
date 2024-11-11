@@ -81,7 +81,7 @@ const Notifications = () => {
       resourceType: toSentenceCase(notification.value.resourceType),
       recipient: notification.value.recipient,
       channel: toSentenceCase(notification.value.channel),
-      status: toSentenceCase(notification.value.status),
+      status: notification.value.logs.message === "Invalid order state!" ? "Ignored" : toSentenceCase(notification.value.status),
       createdAt: date.toLocaleDateString(),
       timestamp: date.toLocaleTimeString(),
     };
@@ -176,7 +176,6 @@ const Notifications = () => {
               <>
                 <SecondaryButton iconLeft={<RefreshIcon />} label="Refresh" onClick={handleRefresh} />
                 <SecondaryButton iconLeft={<ExportIcon />} label="Export" onClick={handleExport} />
-                {/* <SecondaryButton iconLeft={<ExportIcon />} label="Del" onClick={() => { deleteAllCustomObjects(dispatch) }} /> */}
               </>
             )}
         </div>

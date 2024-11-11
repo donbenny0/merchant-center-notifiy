@@ -149,7 +149,7 @@ const EditMessages = ({ linkToNotifications }: TEditMessagesProps) => {
                         selectedValue={seletedValue}
                         onChange={setSelectedValue}
                     >
-                        <ViewSwitcher.Button isDisabled={seletedValue === 'edit-template'} value="edit-template">
+                        <ViewSwitcher.Button  isDisabled={seletedValue === 'edit-template'} value="edit-template">
                             Edit Template
                         </ViewSwitcher.Button>
                     </ViewSwitcher.Group>
@@ -177,7 +177,7 @@ const EditMessages = ({ linkToNotifications }: TEditMessagesProps) => {
                                     <Card theme="light" type="raised" className={styles.noteContainer}>
                                         <h4>Note :</h4>
                                         <ul style={{ lineHeight: '1.5' }}>
-                                            <li><b>Mandatory Fields</b>: Ensure all placeholders are populated with valid data from the <Link isExternal={true} to={"https://docs.commercetools.com/api/projects/orders#order"}>order</Link> response to avoid incomplete messages. </li>
+                                            <li><b>{process.env.MC_APP_ENV_PROJECT_ID}</b>: Ensure all placeholders are populated with valid data from the <Link isExternal={true} to={"https://docs.commercetools.com/api/projects/orders#order"}>order</Link> response to avoid incomplete messages. </li>
                                             <li><b>Character Limits</b>: Consider WhatsApp's character limits (4096 characters for messages) to prevent truncation.</li>
                                             <li><b>Dynamic Data</b>: Ensure the order object has necessary attributes (e.g., shippingAddress, id, totalPrice) populated before generating the message.</li>
                                             <li><b>Supported resource</b>: Currently, this application supports only the order resource. Please refer <Link isExternal={true} to={"https://docs.commercetools.com/api/projects/orders#order"}>CommerceTools official documentation</Link> for order resource and its attributes for more details.</li>
