@@ -76,3 +76,6 @@ export const deleteAllCustomObjects = async (dispatch: any) => {
         throw error;
     }
 };
+
+
+// <SecondaryButton iconLeft={<ExportIcon />} label="del" onClick={() => { deleteAllCustomObjects(dispatch) }} />

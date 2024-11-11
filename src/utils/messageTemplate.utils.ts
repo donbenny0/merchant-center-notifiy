@@ -50,7 +50,7 @@ export const generateMessage = (data: object, template: string): string => {
         try {
             const values = extractValues(data, path.trim());
             if (values.length === 0) {
-                throw new Error(path.trim()); // Throw an error for invalid placeholder
+                throw new Error(path.trim());
             }
             return values.join(', ');
         } catch (error) {

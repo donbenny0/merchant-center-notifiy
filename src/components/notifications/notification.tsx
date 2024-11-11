@@ -17,11 +17,11 @@ import { useRouteMatch } from 'react-router-dom';
 import { NotificationResult } from '../../interfaces/notifications.interface';
 import { fetchAllNotificationsObject } from '../../repository/notifications.repository';
 import { filterRows, toSentenceCase } from '../../utils/notifications.utils';
-import noDataImg from './nodata.png'
+import noDataImg from './nodata.png';
 import Loader from '../loader';
 import * as XLSX from 'xlsx';
 
-const ITEMS_PER_PAGE: number = 10;
+const ITEMS_PER_PAGE: number = 20;
 
 const columns = [
   { key: 'resourceType', label: 'Resource Type', isSortable: true },
@@ -41,6 +41,16 @@ const filterOptions = [
   { value: 'date', label: 'Date' },
 ];
 
+// Helper function to format dates consistently
+const formatDate = (date: Date): string => {
+  return date.toISOString().split('T')[0];
+};
+
+// Helper function to check if two dates are the same day
+const isSameDay = (date1: Date, date2: Date): boolean => {
+  return formatDate(date1) === formatDate(date2);
+};
+
 const Notifications = () => {
   const dispatch = useAsyncDispatch();
   const match = useRouteMatch();
@@ -54,48 +64,54 @@ const Notifications = () => {
   const [dateFilter, setDateFilter] = useState<string>('');
   const [sortBy, setSortBy] = useState<{ key: string; order: 'asc' | 'desc' }>({
     key: 'createdAt',
-    order: 'desc'
+    order: 'desc',
   });
 
-  const loadNotifications = useCallback(async (limit: number) => {
-    try {
-      const results = await fetchAllNotificationsObject(dispatch, limit);
-      setNotifications(results);
-    } catch (error) {
-      console.error('Failed to load notifications:', error);
-      setNotifications([]);
-
-    } finally {
-      setIsLoading(false);
-    }
-  }, [dispatch]);
+  const loadNotifications = useCallback(
+    async (limit: number) => {
+      try {
+        const results = await fetchAllNotificationsObject(dispatch, limit);
+        setNotifications(results);
+      } catch (error) {
+        console.error('Failed to load notifications:', error);
+        setNotifications([]);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [dispatch]
+  );
 
   useEffect(() => {
     loadNotifications(perPage);
   }, [loadNotifications, perPage]);
 
-  const rows = useMemo(() => notifications.map(notification => {
-    const date = new Date(notification.createdAt);
-    return {
-      id: notification.id,
-      resourceType: toSentenceCase(notification.value.resourceType),
-      recipient: notification.value.recipient,
-      channel: toSentenceCase(notification.value.channel),
-      status: notification.value.logs.message === "Invalid order state!" ? "Ignored" : toSentenceCase(notification.value.status),
-      createdAt: date.toLocaleDateString(),
-      timestamp: date.toLocaleTimeString(),
-    };
-  }), [notifications]);
+  const rows = useMemo(() => 
+    notifications.map((notification) => {
+      const date = new Date(notification.createdAt);
+      return {
+        id: notification.id,
+        resourceType: toSentenceCase(notification.value.resourceType),
+        recipient: notification.value.recipient,
+        channel: toSentenceCase(notification.value.channel),
+        status:
+          notification.value.logs.message === 'Invalid order state!'
+            ? 'Ignored'
+            : toSentenceCase(notification.value.status),
+        createdAt: date,  // Store the full Date object
+        createdAtDisplay: date.toLocaleDateString(), // For display purposes
+        timestamp: date.toLocaleTimeString(),
+      };
+    }),
+    [notifications]
+  );
 
   const filteredRows = useMemo(() => {
     let filtered = filterRows(rows, searchTerm, filterValue, filterField);
 
     if (dateFilter && filterField === 'date') {
-      const filterDate = new Date(dateFilter).toLocaleDateString();
-      filtered = filtered.filter(row => {
-        const rowDate = new Date(row.createdAt).toLocaleDateString();
-        return rowDate === filterDate;
-      });
+      const filterDate = new Date(dateFilter);
+      filtered = filtered.filter((row) => isSameDay(row.createdAt, filterDate));
     }
 
     return filtered;
@@ -103,8 +119,14 @@ const Notifications = () => {
 
   const sortedRows = useMemo(() => {
     return [...filteredRows].sort((a, b) => {
-      const aValue = a[sortBy.key as keyof typeof a];
-      const bValue = b[sortBy.key as keyof typeof b];
+      let aValue = a[sortBy.key as keyof typeof a];
+      let bValue = b[sortBy.key as keyof typeof b];
+
+      // Special handling for date sorting
+      if (sortBy.key === 'createdAt') {
+        aValue = (a.createdAt as Date).getTime();
+        bValue = (b.createdAt as Date).getTime();
+      }
 
       if (sortBy.order === 'asc') {
         return aValue > bValue ? 1 : -1;
@@ -113,9 +135,18 @@ const Notifications = () => {
     });
   }, [filteredRows, sortBy]);
 
+  // Transform the sorted rows for display
+  const displayRows = useMemo(() => 
+    sortedRows.map(row => ({
+      ...row,
+      createdAt: row.createdAtDisplay, // Use the display format for the table
+    })),
+    [sortedRows]
+  );
+
   const paginatedRows = useMemo(() =>
-    sortedRows.slice((page - 1) * perPage, page * perPage),
-    [sortedRows, page, perPage]
+    displayRows.slice((page - 1) * perPage, page * perPage),
+    [displayRows, page, perPage]
   );
 
   const handleFilterChange = useCallback((event: { target: { value: string } }) => {
@@ -123,39 +154,57 @@ const Notifications = () => {
     setFilterValue('');
     setSearchTerm('');
     setDateFilter('');
+    setPage(1); // Reset to first page when filter changes
   }, []);
 
-  const handleSearchChange = useCallback((event: { target: { value: string } }) => {
-    filterField === 'all'
-      ? setSearchTerm(event.target.value)
-      : setFilterValue(event.target.value);
-  }, [filterField]);
+  const handleSearchChange = useCallback(
+    (event: { target: { value: string } }) => {
+      filterField === 'all'
+        ? setSearchTerm(event.target.value)
+        : setFilterValue(event.target.value);
+      setPage(1); // Reset to first page when search changes
+    },
+    [filterField]
+  );
 
   const handleDateChange = useCallback((event: { target: { value: string } }) => {
     setDateFilter(event.target.value);
+    setPage(1); // Reset to first page when date changes
   }, []);
 
   const handleColumnSort = useCallback((columnKey: string) => {
-    setSortBy(prevSort => ({
+    setSortBy((prevSort) => ({
       key: columnKey,
       order: prevSort.key === columnKey && prevSort.order === 'asc' ? 'desc' : 'asc',
     }));
   }, []);
 
   const handleExport = useCallback(() => {
-    const worksheet = XLSX.utils.json_to_sheet(sortedRows);
+    // Transform data for export
+    const exportData = sortedRows.map(row => ({
+      ...row,
+      createdAt: row.createdAtDisplay,
+      createdAtDisplay: undefined
+    }));
+    
+    const worksheet = XLSX.utils.json_to_sheet(exportData);
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Notifications");
-    XLSX.writeFile(workbook, "notifications.xlsx");
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Notifications');
+    XLSX.writeFile(workbook, 'notifications.xlsx');
   }, [sortedRows]);
 
   const handleRefresh = useCallback(() => {
     setIsLoading(true);
     loadNotifications(perPage);
-  }, [loadNotifications]);
+  }, [loadNotifications, perPage]);
 
-  const searchPlaceholder = useMemo(() =>
-    `Search${filterField !== 'all' ? ` by ${filterOptions.find(opt => opt.value === filterField)?.label}` : '...'}`,
+  const searchPlaceholder = useMemo(
+    () =>
+      `Search${
+        filterField !== 'all'
+          ? ` by ${filterOptions.find((opt) => opt.value === filterField)?.label}`
+          : '...'
+      }`,
     [filterField]
   );
 
@@ -165,22 +214,28 @@ const Notifications = () => {
         <Text.Headline as="h1" intlMessage={messages.title} />
         <div className={style.actionButtons}>
           <Link isExternal={false} to={`${match.url}/settings`}>
-            <SecondaryButton
-              iconLeft={<GearIcon />}
-              label="Settings"
-            />
+            <SecondaryButton iconLeft={<GearIcon />} label="Settings" />
           </Link>
 
-          {paginatedRows.length === 0 ? (<></>)
-            : (
-              <>
-                <SecondaryButton iconLeft={<RefreshIcon />} label="Refresh" onClick={handleRefresh} />
-                <SecondaryButton iconLeft={<ExportIcon />} label="Export" onClick={handleExport} />
-              </>
-            )}
+          {paginatedRows.length === 0 ? (
+            <></>
+          ) : (
+            <>
+              <SecondaryButton
+                iconLeft={<RefreshIcon />}
+                label="Refresh"
+                onClick={handleRefresh}
+              />
+              <SecondaryButton
+                iconLeft={<ExportIcon />}
+                label="Export"
+                onClick={handleExport}
+              />
+            </>
+          )}
         </div>
       </div>
-      <Text.Subheadline as='h5' intlMessage={messages.subtitle} />
+      <Text.Subheadline as="h5" intlMessage={messages.subtitle} />
       <>
         {isLoading ? null : (
           <>
@@ -189,7 +244,11 @@ const Notifications = () => {
                 {filterField === 'date' ? (
                   <DateInput
                     value={dateFilter}
-                    onChange={(event) => handleDateChange({ target: { value: event.target.value || '' } })}
+                    onChange={(event) =>
+                      handleDateChange({
+                        target: { value: event.target.value || '' },
+                      })
+                    }
                     horizontalConstraint="scale"
                   />
                 ) : (
@@ -207,7 +266,11 @@ const Notifications = () => {
                   title=""
                   value={filterField}
                   options={filterOptions}
-                  onChange={(event) => handleFilterChange({ target: { value: event.target.value as string } })}
+                  onChange={(event) =>
+                    handleFilterChange({
+                      target: { value: event.target.value as string },
+                    })
+                  }
                   touched={true}
                   errors={{}}
                   isRequired={false}
@@ -215,14 +278,18 @@ const Notifications = () => {
               </div>
             </Spacings.Inline>
           </>
-        )}        {isLoading ? (
+        )}
+        {isLoading ? (
           <div className={style.loadingContainer}>
             <Loader />
           </div>
         ) : paginatedRows.length === 0 ? (
           <div className={style.noDataFoudContainer}>
             <img className={style.noDataImg} src={noDataImg} alt="" />
-            <span>Looks like my notification inbox is as empty as my fridge after midnight!</span>
+            <span>
+              Looks like my notification inbox is as empty as my fridge after
+              midnight!
+            </span>
           </div>
         ) : (
           <>

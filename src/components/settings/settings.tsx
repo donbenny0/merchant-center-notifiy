@@ -124,7 +124,7 @@ const EditMessages = ({ linkToNotifications }: TEditMessagesProps) => {
             return null;
         }
         const message = generateMessage(selectedOrder, template);
-        setRenderedMessage(message); // Fixed typo in state setter name
+        setRenderedMessage(message)
         return message;
     }
 
