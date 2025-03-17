@@ -23,6 +23,14 @@ import * as XLSX from 'xlsx';
 
 const ITEMS_PER_PAGE: number = 20;
 
+console.log('🚀 - process.env.CLOUD_IDENTIFIER', process.env.CLOUD_IDENTIFIER);
+console.log('🚀 - process.env.PROJECT_ID', process.env.PROJECT_ID);
+console.log('🚀 - process.env.CUSTOM_APPLICATION_ID', process.env.CUSTOM_APPLICATION_ID);
+console.log('🚀 - process.env.ENABLE_NEW_JSX_TRANSFORM', process.env.ENABLE_NEW_JSX_TRANSFORM);
+console.log('🚀 - process.env.FAST_REFRESH', process.env.FAST_REFRESH);
+console.log('🚀 - process.env.ENTRY_POINT_URI_PATH', process.env.ENTRY_POINT_URI_PATH);
+console.log('🚀 - process.env.APPLICATION_URL', process.env.APPLICATION_URL);
+
 const columns = [
   { key: 'resourceType', label: 'Resource Type', isSortable: true },
   { key: 'recipient', label: 'Recipient', isSortable: true },
