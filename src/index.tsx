@@ -2,6 +2,10 @@
 
 import ReactDOM from 'react-dom';
 import EntryPoint from './components/entry-point';
+import applicationConfig from '@commercetools-frontend/application-config';
+
+console.log('🚀 - applicationConfig:', applicationConfig);
+
 console.log('🚀 - process.env.CLOUD_IDENTIFIER', process.env.CLOUD_IDENTIFIER);
 console.log('🚀 - process.env.PROJECT_ID', process.env.PROJECT_ID);
 console.log('🚀 - process.env.CUSTOM_APPLICATION_ID', process.env.CUSTOM_APPLICATION_ID);
