@@ -4,7 +4,6 @@
   "description": "",
   "private": true,
   "scripts": {
-    "pre-deploy": "./start.sh",
     "build": "mc-scripts build",
     "start": "mc-scripts start",
     "compile-html": "mc-scripts compile-html",
