@@ -12,7 +12,7 @@ const config = {
       initialProjectKey: "${env:PROJECT_ID}",
     },
     production: {
-      applicationId: "${env:APPLICATION_ID}",
+      applicationId: "${env:CUSTOM_APPLICATION_ID}",
       url: "https://notifications-taupe.vercel.app",
     },
   },
