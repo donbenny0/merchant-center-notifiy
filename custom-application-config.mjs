@@ -16,6 +16,9 @@ const config = {
       url: '${env:APPLICATION_URL}',
     },
   },
+  additionalEnv: {
+    twilio_sid: "testSSID"
+  },
   oAuthScopes: {
     view: ['view_orders'],
     manage: ['manage_orders'],
