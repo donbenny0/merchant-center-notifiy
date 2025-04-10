@@ -53,7 +53,7 @@ const isSameDay = (date1: Date, date2: Date): boolean => {
 
 const Notifications = () => {
       const dataLocale = useApplicationContext((context) =>
-        context.environment.env
+        context.environment
     );
     console.log('context envornments', dataLocale);
   const dispatch = useAsyncDispatch();
