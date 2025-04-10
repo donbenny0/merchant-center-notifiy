@@ -20,6 +20,7 @@ import { filterRows, toSentenceCase } from '../../utils/notifications.utils';
 import noDataImg from './nodata.png';
 import Loader from '../loader';
 import * as XLSX from 'xlsx';
+import { useApplicationContext } from '@commercetools-frontend/application-shell-connectors';
 
 const ITEMS_PER_PAGE: number = 20;
 const columns = [
@@ -51,6 +52,10 @@ const isSameDay = (date1: Date, date2: Date): boolean => {
 };
 
 const Notifications = () => {
+      const dataLocale = useApplicationContext((context) =>
+        context.environment.env
+    );
+    console.log('context envornments', dataLocale);
   const dispatch = useAsyncDispatch();
   const match = useRouteMatch();
   const [notifications, setNotifications] = useState<NotificationResult[]>([]);
